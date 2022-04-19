@@ -7,3 +7,11 @@ export const connection = mysql.createConnection({
   database: "guardJobPosting",
   multipleStatements: true,
 });
+
+connection.connect((err) => {
+  if (!err) {
+    console.log("MySQL DB Connected!");
+  } else {
+    console.log(err);
+  }
+});

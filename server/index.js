@@ -15,15 +15,6 @@ app.use(express.json({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-// DB Connect
-connection.connect((err) => {
-  if (!err) {
-    console.log("MySQL DB Connected!");
-  } else {
-    console.log(err);
-  }
-});
-
 // Routes
 app.use("/guards", guardRoute);
 

@@ -1,7 +1,7 @@
 import { connection } from "../db.js";
 
 export const getGuards = (req, res) => {
-  connection.query("SELECT * FROM guard", (err, rows, fields) => {
+  connection.query("SELECT * FROM guard", (err, rows) => {
     if (!err) {
       res.status(201).json(rows);
     } else {
@@ -24,4 +24,15 @@ export const addGuard = (req, res) => {
       }
     }
   );
+};
+
+export const deleteGuard = (req, res) => {
+  const { id } = req.params;
+  connection.query(`DELETE FROM guard WHERE id='${id}'`, (err, rows) => {
+    if (!err) {
+      res.status(201).json({ message: "Guard Deleted Successfully!" });
+    } else {
+      res.status(500).json(err);
+    }
+  });
 };

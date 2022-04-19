@@ -1,8 +1,6 @@
-import mysql from "mysql";
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
-import { connection } from "./db.js";
 
 // Importing Routes
 import { router as guardRoute } from "./routes/guard.js";

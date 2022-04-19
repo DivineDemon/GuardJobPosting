@@ -1,6 +1,5 @@
 import express from "express";
+import { getGuards, addGuard } from "../controllers/guardController.js";
 export const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("Guard Base Route Working!");
-});
+router.route("/").get(getGuards).post(addGuard);

@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
-import { errorHandler } from "./middleware/errorMiddleware";
+import { errorHandler } from "./middleware/errorMiddleware.js";
 
 // Importing Routes
 import { router as addressRoute } from "./routes/address.js";

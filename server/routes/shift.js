@@ -4,7 +4,7 @@ import {
   addShift,
   deleteShift,
 } from "../controllers/shiftController.js";
-import { verifyTokenAndAdmin } from "../middleware/verifyToken";
+import { verifyTokenAndAdmin } from "../middleware/verifyToken.js";
 export const router = express.Router();
 
 router.route("/").get(getShifts).post(verifyTokenAndAdmin, addShift);

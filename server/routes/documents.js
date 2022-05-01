@@ -4,7 +4,7 @@ import {
   addDocument,
   deleteDocument,
 } from "../controllers/documentController.js";
-import { verifyTokenAndAuthorization } from "../middleware/verifyToken";
+import { verifyTokenAndAuthorization } from "../middleware/verifyToken.js";
 export const router = express.Router();
 
 router

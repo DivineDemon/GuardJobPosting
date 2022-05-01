@@ -4,7 +4,7 @@ import {
   addBank,
   deleteBank,
 } from "../controllers/bankController.js";
-import { verifyTokenAndAdmin } from "../middleware/verifyToken";
+import { verifyTokenAndAdmin } from "../middleware/verifyToken.js";
 
 export const router = express.Router();
 

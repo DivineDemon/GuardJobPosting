@@ -4,7 +4,7 @@ import {
   addAddress,
   deleteAddress,
 } from "../controllers/addressController.js";
-import { verifyTokenAndAdmin } from "../middleware/verifyToken";
+import { verifyTokenAndAdmin } from "../middleware/verifyToken.js";
 
 export const router = express.Router();
 

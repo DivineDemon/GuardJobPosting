@@ -4,7 +4,12 @@ import {
   addAddress,
   deleteAddress,
 } from "../controllers/addressController.js";
+import { verifyTokenAndAdmin } from "../middleware/verifyToken";
+
 export const router = express.Router();
 
-router.route("/").get(getAddresses).post(addAddress);
-router.route("/:id").delete(deleteAddress);
+router
+  .route("/")
+  .get(verifyTokenAndAdmin, getAddresses)
+  .post(verifyTokenAndAdmin, addAddress);
+router.route("/:id").delete(verifyTokenAndAdmin, deleteAddress);

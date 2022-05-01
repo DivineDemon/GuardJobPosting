@@ -4,7 +4,12 @@ import {
   addCompany,
   deleteCompany,
 } from "../controllers/companyController.js";
+import { verifyTokenAndAdmin } from "../middleware/verifyToken";
+
 export const router = express.Router();
 
-router.route("/").get(getCompanies).post(addCompany);
-router.route("/:id").delete(deleteCompany);
+router
+  .route("/")
+  .get(verifyTokenAndAdmin, getCompanies)
+  .post(verifyTokenAndAdmin, addCompany);
+router.route("/:id").delete(verifyTokenAndAdmin, deleteCompany);

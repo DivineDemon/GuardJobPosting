@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
+import { errorHandler } from "./middleware/errorMiddleware";
 
 // Importing Routes
 import { router as addressRoute } from "./routes/address.js";
@@ -18,6 +19,7 @@ const app = express();
 app.use(express.json({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(errorHandler);
 
 // Routes
 app.use("/addresses", addressRoute);

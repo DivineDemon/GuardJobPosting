@@ -3,7 +3,13 @@ import cors from "cors";
 import "dotenv/config";
 
 // Importing Routes
+import { router as addressRoute } from "./routes/address.js";
+import { router as bankRoute } from "./routes/bank.js";
+import { router as companyRoute } from "./routes/company.js";
+import { router as documentsRoute } from "./routes/documents.js";
 import { router as guardRoute } from "./routes/guard.js";
+import { router as jobsRoute } from "./routes/jobs.js";
+import { router as shiftRoute } from "./routes/shift.js";
 
 // Initializing Express App
 const app = express();
@@ -14,7 +20,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // Routes
+app.use("/addresses", addressRoute);
+app.use("/banks", bankRoute);
+app.use("/companies", companyRoute);
+app.use("/documents", documentsRoute);
 app.use("/guards", guardRoute);
+app.use("/jobs", jobsRoute);
+app.use("/shifts", shiftRoute);
 
 // Starting the App
 const PORT = process.env.PORT || 5000;

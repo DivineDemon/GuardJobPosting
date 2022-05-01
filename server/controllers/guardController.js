@@ -11,9 +11,18 @@ export const getGuards = (req, res) => {
 };
 
 export const addGuard = (req, res) => {
-  const { name, email, phone } = req.body;
+  const {
+    firstName,
+    middleName,
+    lastName,
+    email,
+    password,
+    phone,
+    dob,
+    gender,
+  } = req.body;
   connection.query(
-    `INSERT INTO guard (name, email, phone) VALUES ('${name}', '${email}', '${phone}')`,
+    `INSERT INTO guard (firstName, middleName, lastName, email, password, phone, dob, gender) VALUES ('${firstName}', '${middleName}', '${lastName}', '${email}', '${password}', '${phone}', '${dob}', '${gender}')`,
     (err, rows, fields) => {
       if (!err) {
         res

@@ -38,16 +38,16 @@ export const addGuard = (req, res) => {
 export const loginUser = (req, res) => {
   try {
     const form_password = aes.encrypt(req.body.password, SECRET).toString();
-    if (req.body.isAdmin === 1) {
+    const { username, password, isAdmin } = req.body;
+    if (isAdmin === 1) {
       connection.query(
-        `SELECT * FROM admin WHERE username='${req.body.username}' AND password='${req.body.password}'`,
+        `SELECT * FROM admin WHERE username='${username}'`,
         function (err, rows) {
-          if (!err) {
-            console.log(rows);
+          if (!err && rows[0].password === password) {
             const accessToken = jwt.sign(
               {
-                username: req.body.username,
-                isAdmin: req.body.isAdmin,
+                username,
+                isAdmin,
               },
               SECRET,
               {
@@ -57,8 +57,8 @@ export const loginUser = (req, res) => {
             res.status(201).json({
               success: true,
               message: "Admin Logged In!",
-              username: req.body.username,
-              form_password,
+              username,
+              password,
               accessToken,
             });
           } else {
@@ -70,13 +70,13 @@ export const loginUser = (req, res) => {
       );
     } else {
       connection.query(
-        `SELECT * FROM guard WHERE username='${req.body.username}' AND password='${form_password}'`,
+        `SELECT * FROM guard WHERE username='${username}'`,
         (err, rows, fields) => {
-          if (!err) {
+          if (!err && rows[0].password === password) {
             const accessToken = jwt.sign(
               {
-                username: req.body.username,
-                isAdmin: req.body.isAdmin,
+                username,
+                isAdmin,
               },
               SECRET,
               {
@@ -86,7 +86,6 @@ export const loginUser = (req, res) => {
             res.status(201).json({
               success: true,
               message: "Guard Logged In!",
-              username: req.body.username,
               form_password,
               accessToken,
             });

@@ -58,7 +58,6 @@ export const loginUser = (req, res) => {
               success: true,
               message: "Admin Logged In!",
               username,
-              password,
               accessToken,
             });
           } else {
@@ -86,7 +85,7 @@ export const loginUser = (req, res) => {
             res.status(201).json({
               success: true,
               message: "Guard Logged In!",
-              form_password,
+              username,
               accessToken,
             });
           } else {

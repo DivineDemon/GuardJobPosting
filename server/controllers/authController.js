@@ -38,11 +38,12 @@ export const addGuard = (req, res) => {
 export const loginUser = (req, res) => {
   try {
     const form_password = aes.encrypt(req.body.password, SECRET).toString();
-    if (req.body.isAdmin) {
+    if (req.body.isAdmin === 1) {
       connection.query(
-        `SELECT * FROM admin WHERE username='${req.body.username}' AND password='${form_password}'`,
-        (err, rows) => {
+        `SELECT * FROM admin WHERE username='${req.body.username}' AND password='${req.body.password}'`,
+        function (err, rows) {
           if (!err) {
+            console.log(rows);
             const accessToken = jwt.sign(
               {
                 username: req.body.username,
@@ -55,11 +56,11 @@ export const loginUser = (req, res) => {
             );
             res.status(201).json({
               success: true,
+              message: "Admin Logged In!",
               username: req.body.username,
               form_password,
               accessToken,
             });
-            console.log(rows);
           } else {
             res
               .status(404)
@@ -84,6 +85,7 @@ export const loginUser = (req, res) => {
             );
             res.status(201).json({
               success: true,
+              message: "Guard Logged In!",
               username: req.body.username,
               form_password,
               accessToken,

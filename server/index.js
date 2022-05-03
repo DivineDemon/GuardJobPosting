@@ -23,9 +23,9 @@ app.use(cors());
 app.use(errorHandler);
 
 // Routes
-app.use("/", (req, res) => {
-  res.status(200).json({ message: "Base URL Working!" });
-});
+// app.use("/", (req, res) => {
+//   res.status(200).json({ message: "Base URL Working!" });
+// });
 app.use("/addresses", addressRoute);
 app.use("/banks", bankRoute);
 app.use("/companies", companyRoute);

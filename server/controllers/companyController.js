@@ -10,22 +10,6 @@ export const getCompanies = (req, res) => {
   });
 };
 
-export const addCompany = (req, res) => {
-  const { name, phone, email } = req.body;
-  connection.query(
-    `INSERT INTO company (name, phone, email) VALUES ('${name}', '${phone}', '${email}')`,
-    (err, rows, fields) => {
-      if (!err) {
-        res
-          .status(201)
-          .json({ message: "Data Inserted Successfully!", data: rows });
-      } else {
-        res.status(500).json(err);
-      }
-    }
-  );
-};
-
 export const deleteCompany = (req, res) => {
   const { id } = req.params;
   connection.query(`DELETE FROM company WHERE id='${id}'`, (err, rows) => {

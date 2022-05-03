@@ -16,9 +16,11 @@ export const addAddress = (req, res) => {
     `INSERT INTO address (state, city, postalCode) VALUES ('${state}', '${city}', '${postalCode}')`,
     (err, rows, fields) => {
       if (!err) {
-        res
-          .status(201)
-          .json({ message: "Data Inserted Successfully!", data: rows });
+        res.status(201).json({
+          success: true,
+          message: "Address Inserted Successfully!",
+          data: rows,
+        });
       } else {
         res.status(500).json(err);
       }

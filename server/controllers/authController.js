@@ -127,36 +127,39 @@ export const loginGuard = (req, res) => {
 
 export const loginCompany = (req, res) => {
   try {
-    connection.query(
-      `SELECT * FROM company WHERE username=${req.body.username}`,
-      function (err, rows) {
-        if (!err && rows[0].password === req.body.password) {
-          const accessToken = jwt.sign(
-            {
+    const { username, password, isAdmin } = req.body;
+    if (isAdmin === 0) {
+      connection.query(
+        `SELECT * FROM company WHERE username=${username}`,
+        function (err, rows) {
+          if (!err && rows[0].password === password) {
+            const accessToken = jwt.sign(
+              {
+                id: rows[0].companyID,
+                isAdmin: rows[0].isAdmin,
+              },
+              SECRET,
+              {
+                expiresIn: "3d",
+              }
+            );
+            res.status(201).json({
+              success: true,
+              message: "Company Logged In!",
               id: rows[0].companyID,
-            },
-            SECRET,
-            {
-              expiresIn: "3d",
-            }
-          );
-          res.status(201).json({
-            success: true,
-            message: "Company Logged In!",
-            id: rows[0].companyID,
-            username: rows[0].username,
-            accessToken,
-          });
-        } else {
-          res.status(404).json({
-            success: false,
-            message: "Company Not Found!",
-          });
+              name: rows[0].name,
+              accessToken,
+            });
+          } else {
+            res
+              .status(404)
+              .json({ success: false, message: "Company Not Found!" });
+          }
         }
-      }
-    );
+      );
+    }
   } catch (error) {
     res.status(500);
-    throw new Error(error);
+    throw new Error(error); 
   }
 };

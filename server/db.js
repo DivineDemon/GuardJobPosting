@@ -9,27 +9,26 @@ const db_config = {
 };
 
 function handleDisconnect() {
-  connection = mysql.createConnection(db_config);
-  return connection;
+  const connect = mysql.createConnection(db_config);
+  connect.connect((err) => {
+    if (!err) {
+      console.log("MySQL DB Connected!");
+    } else {
+      console.log(err);
+      setTimeout(handleDisconnect, 2000);
+    }
+  });
+
+  // Error Handling PROTOCOL_CONNECTION_LOST
+  connect.on("error", function (err) {
+    console.log(err);
+    if (err.code === "PROTOCOL_CONNECTION_LOST") {
+      handleDisconnect();
+    } else {
+      throw err;
+    }
+  });
+  return connect;
 }
 
-export const connection = mysql.createConnection(db_config);
-
-connection.connect((err) => {
-  if (!err) {
-    console.log("MySQL DB Connected!");
-  } else {
-    console.log(err);
-    setTimeout(handleDisconnect, 2000);
-  }
-});
-
-// Error Handling PROTOCOL_CONNECTION_LOST
-connection.on("error", function (err) {
-  console.log(err);
-  if (err.code === "PROTOCOL_CONNECTION_LOST") {
-    handleDisconnect();
-  } else {
-    throw err;
-  }
-});
+export const connection = handleDisconnect();

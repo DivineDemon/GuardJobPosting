@@ -54,6 +54,7 @@ export const loginAdmin = (req, res) => {
       connection.query(
         `SELECT * FROM admin WHERE username='${username}'`,
         function (err, rows) {
+          console.log(rows);
           if (!err && rows[0].password === password) {
             const accessToken = jwt.sign(
               {
@@ -93,6 +94,7 @@ export const loginGuard = (req, res) => {
       connection.query(
         `SELECT * FROM guard WHERE email='${email}'`,
         function (err, rows) {
+          console.log(rows);
           if (!err && rows[0].password === password) {
             const accessToken = jwt.sign(
               {
@@ -132,6 +134,7 @@ export const loginCompany = (req, res) => {
       connection.query(
         `SELECT * FROM company WHERE username=${username}`,
         function (err, rows) {
+          console.log(rows);
           if (!err && rows[0].password === password) {
             const accessToken = jwt.sign(
               {

@@ -88,10 +88,10 @@ export const loginAdmin = (req, res) => {
 
 export const loginGuard = (req, res) => {
   try {
-    const { username, password, isAdmin } = req.body;
+    const { email, password, isAdmin } = req.body;
     if (isAdmin === 0) {
       connection.query(
-        `SELECT * FROM guard WHERE username='${username}'`,
+        `SELECT * FROM guard WHERE email='${email}'`,
         function (err, rows) {
           if (!err && rows[0].password === password) {
             const accessToken = jwt.sign(
@@ -108,7 +108,7 @@ export const loginGuard = (req, res) => {
               success: true,
               message: "Guard Logged In!",
               id: rows[0].guardID,
-              username: rows[0].username,
+              email: rows[0].email,
               accessToken,
             });
           } else {
@@ -160,6 +160,6 @@ export const loginCompany = (req, res) => {
     }
   } catch (error) {
     res.status(500);
-    throw new Error(error); 
+    throw new Error(error);
   }
 };

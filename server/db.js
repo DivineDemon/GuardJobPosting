@@ -6,29 +6,12 @@ const db_config = {
   password: "e975f755",
   database: "heroku_d11cc74f6c0497d",
   multipleStatements: true,
+  connectionLimit: 10,
 };
 
-function handleDisconnect() {
-  const connect = mysql.createConnection(db_config);
-  connect.connect((err) => {
-    if (!err) {
-      console.log("MySQL DB Connected!");
-    } else {
-      console.log(err);
-      setTimeout(handleDisconnect, 2000);
-    }
-  });
+const pool = mysql.createPool(db_config);
+pool.on("acquire", function (connection) {
+  console.log("Connection %d acquired", connection.threadId);
+});
 
-  // Error Handling PROTOCOL_CONNECTION_LOST
-  connect.on("error", function (err) {
-    console.log(err);
-    if (err.code === "PROTOCOL_CONNECTION_LOST") {
-      handleDisconnect();
-    } else {
-      throw err;
-    }
-  });
-  return connect;
-}
-
-export const connection = handleDisconnect();
+export const connection = pool;

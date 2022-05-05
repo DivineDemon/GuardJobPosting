@@ -12,7 +12,7 @@ export const getGuards = (req, res) => {
 
 export const deleteGuard = (req, res) => {
   const { id } = req.params;
-  connection.query(`DELETE FROM guard WHERE id='${id}'`, (err, rows) => {
+  connection.query(`DELETE FROM guard WHERE guardID=${id}`, (err, rows) => {
     if (!err) {
       res.status(201).json({ message: "Guard Deleted Successfully!" });
     } else {

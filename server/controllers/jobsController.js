@@ -29,7 +29,7 @@ export const addJob = (req, res) => {
 
 export const deleteJob = (req, res) => {
   const { id } = req.params;
-  connection.query(`DELETE FROM jobs WHERE id='${id}'`, (err, rows) => {
+  connection.query(`DELETE FROM jobs WHERE jobsID=${id}`, (err, rows) => {
     if (!err) {
       res.status(201).json({ message: "Job Deleted Successfully!" });
     } else {

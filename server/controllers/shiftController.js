@@ -28,7 +28,7 @@ export const addShift = (req, res) => {
 
 export const deleteShift = (req, res) => {
   const { id } = req.params;
-  connection.query(`DELETE FROM shift WHERE id='${id}'`, (err, rows) => {
+  connection.query(`DELETE FROM shift WHERE shiftID=${id}`, (err, rows) => {
     if (!err) {
       res.status(201).json({ message: "Shift Deleted Successfully!" });
     } else {

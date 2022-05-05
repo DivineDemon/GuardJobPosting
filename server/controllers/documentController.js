@@ -44,11 +44,14 @@ export const addDocument = (req, res) => {
 
 export const deleteDocument = (req, res) => {
   const { id } = req.params;
-  connection.query(`DELETE FROM document WHERE id='${id}'`, (err, rows) => {
-    if (!err) {
-      res.status(201).json({ message: "Document Deleted Successfully!" });
-    } else {
-      res.status(500).json(err);
+  connection.query(
+    `DELETE FROM document WHERE documentID=${id}`,
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json({ message: "Document Deleted Successfully!" });
+      } else {
+        res.status(500).json(err);
+      }
     }
-  });
+  );
 };

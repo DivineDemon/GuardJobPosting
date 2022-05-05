@@ -28,7 +28,7 @@ export const addBank = (req, res) => {
 
 export const deleteBank = (req, res) => {
   const { id } = req.params;
-  connection.query(`DELETE FROM bank WHERE id='${id}'`, (err, rows) => {
+  connection.query(`DELETE FROM bank WHERE bankID=${id}`, (err, rows) => {
     if (!err) {
       res.status(201).json({ message: "Bank Deleted Successfully!" });
     } else {

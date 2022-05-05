@@ -12,7 +12,7 @@ export const getCompanies = (req, res) => {
 
 export const deleteCompany = (req, res) => {
   const { id } = req.params;
-  connection.query(`DELETE FROM company WHERE id='${id}'`, (err, rows) => {
+  connection.query(`DELETE FROM company WHERE companyID=${id}`, (err, rows) => {
     if (!err) {
       res.status(201).json({ message: "Company Deleted Successfully!" });
     } else {

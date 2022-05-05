@@ -11,10 +11,10 @@ export const getJobs = (req, res) => {
 };
 
 export const addJob = (req, res) => {
-  const { name, location, description, payrate, documentsReq, shifts } =
+  const { name, location, description, payrate, documentList, shifts } =
     req.body;
   connection.query(
-    `INSERT INTO jobs (name, location, description, payrate, documentsReq, shifts) VALUES ('${name}', '${location}', '${description}', ${payrate}, '${documentsReq}', '${shifts}')`,
+    `INSERT INTO jobs (name, location, description, payrate, documentList, shifts) VALUES ('${name}', '${location}', '${description}', ${payrate}, '${documentList}', '${shifts}')`,
     (err, rows, fields) => {
       if (!err) {
         res

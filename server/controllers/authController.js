@@ -6,7 +6,7 @@ const SECRET = "guard-recruiting-app" || process.env.SECRET;
 export const addGuard = (req, res) => {
   try {
     connection.query(
-      `INSERT INTO guard (firstName, middleName, lastName, email, password, phone, dob, gender, emergencyContact, username) VALUES ('${req.body.firstName}', '${req.body.middleName}', '${req.body.lastName}', '${req.body.email}', '${req.body.password}', '${req.body.phone}', '${req.body.dob}', '${req.body.gender}', '${req.body.emergencyContact}', '${req.body.username}')`,
+      `INSERT INTO guard (firstName, middleName, lastName, email, password, phone, dob, gender, emergencyContact) VALUES ('${req.body.firstName}', '${req.body.middleName}', '${req.body.lastName}', '${req.body.email}', '${req.body.password}', '${req.body.phone}', '${req.body.dob}', '${req.body.gender}', '${req.body.emergencyContact}')`,
       (err, rows, fields) => {
         if (!err) {
           res.status(201).json({
@@ -32,9 +32,9 @@ export const addGuard = (req, res) => {
 };
 
 export const addCompany = (req, res) => {
-  const { name, phone, email, username, password } = req.body;
+  const { name, phone, email, password } = req.body;
   connection.query(
-    `INSERT INTO company (name, phone, email, username, password) VALUES ('${name}', '${phone}', '${email}', '${username}', '${password}')`,
+    `INSERT INTO company (name, phone, email, password) VALUES ('${name}', '${phone}', '${email}', '${password}')`,
     (err, rows, fields) => {
       if (!err) {
         res
@@ -49,10 +49,10 @@ export const addCompany = (req, res) => {
 
 export const loginAdmin = (req, res) => {
   try {
-    const { username, password, isAdmin } = req.body;
+    const { email, password, isAdmin } = req.body;
     if (isAdmin === 1) {
       connection.query(
-        `SELECT * FROM admin WHERE username='${username}'`,
+        `SELECT * FROM admin WHERE email='${email}'`,
         function (err, rows) {
           if (!err && rows[0].password === password) {
             const accessToken = jwt.sign(
@@ -69,7 +69,8 @@ export const loginAdmin = (req, res) => {
               success: true,
               message: "Admin Logged In!",
               id: rows[0].adminID,
-              username: rows[0].username,
+              email: rows[0].email,
+              password: rows[0].password,
               accessToken,
             });
           } else {
@@ -109,6 +110,7 @@ export const loginGuard = (req, res) => {
               message: "Guard Logged In!",
               id: rows[0].guardID,
               email: rows[0].email,
+              password: rows[0].password,
               accessToken,
             });
           } else {
@@ -127,10 +129,10 @@ export const loginGuard = (req, res) => {
 
 export const loginCompany = (req, res) => {
   try {
-    const { username, password, isAdmin } = req.body;
+    const { email, password, isAdmin } = req.body;
     if (isAdmin === 0) {
       connection.query(
-        `SELECT * FROM company WHERE username=${username}`,
+        `SELECT * FROM company WHERE email=${email}`,
         function (err, rows) {
           if (!err && rows[0].password === password) {
             const accessToken = jwt.sign(
@@ -147,7 +149,8 @@ export const loginCompany = (req, res) => {
               success: true,
               message: "Company Logged In!",
               id: rows[0].companyID,
-              name: rows[0].name,
+              email: rows[0].email,
+              password: rows[0].password,
               accessToken,
             });
           } else {

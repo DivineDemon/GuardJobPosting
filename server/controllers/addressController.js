@@ -30,7 +30,7 @@ export const addAddress = (req, res) => {
 
 export const deleteAddress = (req, res) => {
   const { id } = req.params;
-  connection.query(`DELETE FROM address WHERE id='${id}'`, (err, rows) => {
+  connection.query(`DELETE FROM address WHERE addressID=${id}`, (err, rows) => {
     if (!err) {
       res.status(201).json({ message: "Address Deleted Successfully!" });
     } else {

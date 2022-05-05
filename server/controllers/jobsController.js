@@ -10,6 +10,19 @@ export const getJobs = (req, res) => {
   });
 };
 
+export const getJob = (req, res) => {
+  connection.query(
+    `SELECT * FROM jobs WHERE jobsID=${req.params.id}`,
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json(rows);
+      } else {
+        res.status(500).json(err);
+      }
+    }
+  );
+};
+
 export const addJob = (req, res) => {
   const { name, location, description, payrate, documentList, shifts } =
     req.body;

@@ -3,6 +3,7 @@ import {
   getBanks,
   addBank,
   deleteBank,
+  getBank,
 } from "../controllers/bankController.js";
 import { verifyTokenAndAdmin } from "../middleware/verifyToken.js";
 
@@ -12,4 +13,7 @@ router
   .route("/")
   .get(verifyTokenAndAdmin, getBanks)
   .post(verifyTokenAndAdmin, addBank);
-router.route("/:id").delete(verifyTokenAndAdmin, deleteBank);
+router
+  .route("/:id")
+  .delete(verifyTokenAndAdmin, deleteBank)
+  .get(verifyTokenAndAdmin, getBank);

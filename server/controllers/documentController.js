@@ -10,6 +10,19 @@ export const getDocuments = (req, res) => {
   });
 };
 
+export const getDocument = (req, res) => {
+  connection.query(
+    `SELECT * FROM document WHERE documentID=${req.params.id}`,
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json(rows);
+      } else {
+        res.status(500).json(err);
+      }
+    }
+  );
+};
+
 export const addDocument = (req, res) => {
   const {
     four82,

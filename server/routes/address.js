@@ -3,6 +3,7 @@ import {
   getAddresses,
   addAddress,
   deleteAddress,
+  getAddress,
 } from "../controllers/addressController.js";
 import { verifyTokenAndAdmin } from "../middleware/verifyToken.js";
 
@@ -12,4 +13,7 @@ router
   .route("/")
   .get(verifyTokenAndAdmin, getAddresses)
   .post(verifyTokenAndAdmin, addAddress);
-router.route("/:id").delete(verifyTokenAndAdmin, deleteAddress);
+router
+  .route("/:id")
+  .delete(verifyTokenAndAdmin, deleteAddress)
+  .get(verifyTokenAndAdmin, getAddress);

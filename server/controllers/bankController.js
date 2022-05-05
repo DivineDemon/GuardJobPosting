@@ -10,6 +10,19 @@ export const getBanks = (req, res) => {
   });
 };
 
+export const getBank = (req, res) => {
+  connection.query(
+    `SELECT * FROM bank WHERE bankID=${req.params.id}`,
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json(rows);
+      } else {
+        res.status(500).json(err);
+      }
+    }
+  );
+};
+
 export const addBank = (req, res) => {
   const { name, accountTitle, accountNo, bsb, abn } = req.body;
   connection.query(

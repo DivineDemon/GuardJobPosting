@@ -10,6 +10,19 @@ export const getShifts = (req, res) => {
   });
 };
 
+export const getShift = (req, res) => {
+  connection.query(
+    `SELECT * FROM shift WHERE shiftID=${req.params.id}`,
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json(rows);
+      } else {
+        res.status(500).json(err);
+      }
+    }
+  );
+};
+
 export const addShift = (req, res) => {
   const { startTime, endTime, date } = req.body;
   connection.query(

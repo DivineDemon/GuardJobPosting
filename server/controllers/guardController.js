@@ -10,6 +10,19 @@ export const getGuards = (req, res) => {
   });
 };
 
+export const getGuard = (req, res) => {
+  connection.query(
+    `SELECT * FROM guard WHERE guardID=${req.params.id}`,
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json(rows);
+      } else {
+        res.status(500).json(err);
+      }
+    }
+  );
+};
+
 export const deleteGuard = (req, res) => {
   const { id } = req.params;
   connection.query(`DELETE FROM guard WHERE guardID=${id}`, (err, rows) => {

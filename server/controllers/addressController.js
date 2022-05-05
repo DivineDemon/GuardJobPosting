@@ -10,6 +10,19 @@ export const getAddresses = (req, res) => {
   });
 };
 
+export const getAddress = (req, res) => {
+  connection.query(
+    `SELECT * FROM address WHERE addressID=${req.params.id}`,
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json(rows);
+      } else {
+        res.status(500).json(err);
+      }
+    }
+  );
+};
+
 export const addAddress = (req, res) => {
   const { state, city, postalCode } = req.body;
   connection.query(

@@ -70,7 +70,7 @@ export const loginAdmin = (req, res) => {
               message: "Admin Logged In!",
               id: rows[0].adminID,
               email: rows[0].email,
-              password: rows[0].password,
+              password,
               accessToken,
             });
           } else {

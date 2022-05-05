@@ -5,14 +5,14 @@ import {
   deleteDocument,
   getDocument,
 } from "../controllers/documentController.js";
-import { verifyTokenAndAuthorization } from "../middleware/verifyToken.js";
+import { verifyTokenAndGuard } from "../middleware/verifyToken.js";
 export const router = express.Router();
 
 router
   .route("/")
   .get(getDocuments)
-  .post(verifyTokenAndAuthorization, addDocument);
+  .post(verifyTokenAndGuard, addDocument);
 router
   .route("/:id")
-  .delete(verifyTokenAndAuthorization, deleteDocument)
+  .delete(verifyTokenAndGuard, deleteDocument)
   .get(getDocument);

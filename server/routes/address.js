@@ -11,9 +11,9 @@ export const router = express.Router();
 
 router
   .route("/")
-  .get(verifyTokenAndAdmin, getAddresses)
+  .get(getAddresses)
   .post(verifyTokenAndAdmin, addAddress);
 router
   .route("/:id")
   .delete(verifyTokenAndAdmin, deleteAddress)
-  .get(verifyTokenAndAdmin, getAddress);
+  .get(getAddress);

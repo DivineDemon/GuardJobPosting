@@ -5,15 +5,15 @@ import {
   deleteBank,
   getBank,
 } from "../controllers/bankController.js";
-import { verifyTokenAndAdmin } from "../middleware/verifyToken.js";
+import {
+  verifyTokenAndAdmin,
+  verifyTokenAndGuard,
+} from "../middleware/verifyToken.js";
 
 export const router = express.Router();
 
 router
   .route("/")
   .get(verifyTokenAndAdmin, getBanks)
-  .post(verifyTokenAndAdmin, addBank);
-router
-  .route("/:id")
-  .delete(verifyTokenAndAdmin, deleteBank)
-  .get(verifyTokenAndAdmin, getBank);
+  .post(verifyTokenAndGuard, addBank);
+router.route("/:id").delete(verifyTokenAndAdmin, deleteBank).get(getBank);

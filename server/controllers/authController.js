@@ -59,6 +59,8 @@ export const loginAdmin = (req, res) => {
               {
                 id: rows[0].adminID,
                 isAdmin: rows[0].isAdmin,
+                isGuard: rows[0].isGuard,
+                isCompany: rows[0].isCompany,
               },
               SECRET,
               {
@@ -99,6 +101,8 @@ export const loginGuard = (req, res) => {
               {
                 id: rows[0].guardID,
                 isAdmin: rows[0].isAdmin,
+                isGuard: rows[0].isGuard,
+                isCompany: rows[0].isCompany,
               },
               SECRET,
               {
@@ -139,6 +143,8 @@ export const loginCompany = (req, res) => {
               {
                 id: rows[0].companyID,
                 isAdmin: rows[0].isAdmin,
+                isGuard: rows[0].isGuard,
+                isCompany: rows[0].isCompany,
               },
               SECRET,
               {

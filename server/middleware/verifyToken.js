@@ -16,9 +16,9 @@ export const verifyToken = (req, res, next) => {
   }
 };
 
-export const verifyTokenAndAuthorization = (req, res, next) => {
+export const verifyTokenAndAdmin = (req, res, next) => {
   verifyToken(req, res, () => {
-    if (req.user.id === req.params.id || req.user.isAdmin) {
+    if (req.user.isAdmin === 1) {
       next();
     } else {
       res.status(403).json("User not Authorized!");
@@ -26,9 +26,19 @@ export const verifyTokenAndAuthorization = (req, res, next) => {
   });
 };
 
-export const verifyTokenAndAdmin = (req, res, next) => {
+export const verifyTokenAndCompany = (req, res, next) => {
   verifyToken(req, res, () => {
-    if (req.user.isAdmin === 0) {
+    if (req.user.isCompany === 1) {
+      next();
+    } else {
+      res.status(403).json("User not Authorized!");
+    }
+  });
+};
+
+export const verifyTokenAndGuard = (req, res, next) => {
+  verifyToken(req, res, () => {
+    if (req.user.isGuard === 1) {
       next();
     } else {
       res.status(403).json("User not Authorized!");

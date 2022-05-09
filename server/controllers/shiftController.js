@@ -49,3 +49,18 @@ export const deleteShift = (req, res) => {
     }
   });
 };
+
+export const updateShift = (req, res) => {
+  const { id } = req.params;
+  const { startTime, endTime, date } = req.body;
+  connection.query(
+    `UPDATE shift SET startTime='${startTime}', endTime='${endTime}', date='${date}' WHERE shiftID=${id}`,
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json({ message: "Shift Updated Successfully!" });
+      } else {
+        res.status(500).json(err);
+      }
+    }
+  );
+};

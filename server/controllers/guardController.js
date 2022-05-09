@@ -33,3 +33,17 @@ export const deleteGuard = (req, res) => {
     }
   });
 };
+
+export const updateGuard = (req, res) => {
+  const { id } = req.params;
+  connection.query(
+    `UPDATE guard SET firstName='${req.body.firstName}', middleName='${req.body.middleName}', lastName='${req.body.lastName}', email='${req.body.email}', password='${req.body.password}', phone='${req.body.phone}', dob='${req.body.dob}', gender='${req.body.gender}', emergencyContact='${req.body.emergencyContact}' WHERE guardID=${id}`,
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json({ message: "Guard Updated Successfully!" });
+      } else {
+        res.status(500).json(err);
+      }
+    }
+  );
+};

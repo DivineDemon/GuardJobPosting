@@ -68,3 +68,34 @@ export const deleteDocument = (req, res) => {
     }
   );
 };
+
+export const updateDocument = (req, res) => {
+  const { id } = req.params;
+  const {
+    four82,
+    pcr,
+    cpr,
+    crowdcontrol,
+    license,
+    firearms,
+    firstaid,
+    medicare,
+    others,
+    passport,
+    responsiblealcohol,
+    visa,
+    whitecard,
+    yellowcard,
+    workingwithchildren,
+  } = req.body;
+  connection.query(
+    `UPDATE document SET four82='${four82}', PCR='${pcr}', CPR='${cpr}', CrowdControl='${crowdcontrol}', License='${license}', Firearms='${firearms}', FirstAid='${firstaid}', MediCare='${medicare}', Others='${others}', Passport='${passport}', ResponsibleAlcohol='${responsiblealcohol}', Visa='${visa}', WhiteCard='${whitecard}', YellowCard='${yellowcard}', WorkingWithChildren='${workingwithchildren}' WHERE documentID=${id}`,
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json({ message: "Document Updated Successfully!" });
+      } else {
+        res.status(500).json(err);
+      }
+    }
+  );
+};

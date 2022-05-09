@@ -33,3 +33,17 @@ export const deleteCompany = (req, res) => {
     }
   });
 };
+
+export const updateCompany = (req, res) => {
+  const { id } = req.params;
+  connection.query(
+    `UPDATE company SET name='${name}', phone='${phone}', email='${email}', password='${password}' WHERE companyID=${id}`,
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json({ message: "Company Updated Successfully!" });
+      } else {
+        res.status(500).json(err);
+      }
+    }
+  );
+};

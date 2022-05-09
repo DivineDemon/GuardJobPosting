@@ -49,3 +49,18 @@ export const deleteBank = (req, res) => {
     }
   });
 };
+
+export const updateBank = (req, res) => {
+  const { id } = req.params;
+  const { name, accountTitle, accountNo, bsb, abn } = req.body;
+  connection.query(
+    `UPDATE bank SET name='${name}', accountTitle='${accountTitle}', accountNo=${accountNo}, bsb=${bsb}, abn=${abn} WHERE bankID=${id}`,
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json({ message: "Bank Updated Successfully!" });
+      } else {
+        res.status(500).json(err);
+      }
+    }
+  );
+};

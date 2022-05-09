@@ -51,3 +51,17 @@ export const deleteAddress = (req, res) => {
     }
   });
 };
+
+export const updateAddress = (req, res) => {
+  const { id } = req.params;
+  connection.query(
+    `UPDATE address SET state='${req.body.state}', city='${req.body.city}', postalCode='${req.body.postalCode}' WHERE addressID=${id}`,
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json({ message: "Address Updated Successfully!" });
+      } else {
+        res.status(500).json(err);
+      }
+    }
+  );
+};

@@ -3,8 +3,12 @@ import {
   getGuards,
   deleteGuard,
   getGuard,
+  updateGuard,
 } from "../controllers/guardController.js";
-import { verifyToken, verifyTokenAndAdmin } from "../middleware/verifyToken.js";
+import {
+  verifyTokenAndGuard,
+  verifyTokenAndAdmin,
+} from "../middleware/verifyToken.js";
 
 export const router = express.Router();
 
@@ -12,4 +16,5 @@ router.get("/", verifyTokenAndAdmin, getGuards);
 router
   .route("/:id")
   .delete(verifyTokenAndAdmin, deleteGuard)
-  .get(verifyTokenAndAdmin, getGuard);
+  .get(verifyTokenAndAdmin, getGuard)
+  .patch(verifyTokenAndGuard, updateGuard);

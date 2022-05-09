@@ -4,6 +4,7 @@ import {
   addBank,
   deleteBank,
   getBank,
+  updateBank,
 } from "../controllers/bankController.js";
 import {
   verifyTokenAndAdmin,
@@ -16,4 +17,8 @@ router
   .route("/")
   .get(verifyTokenAndAdmin, getBanks)
   .post(verifyTokenAndGuard, addBank);
-router.route("/:id").delete(verifyTokenAndAdmin, deleteBank).get(getBank);
+router
+  .route("/:id")
+  .delete(verifyTokenAndAdmin, deleteBank)
+  .get(getBank)
+  .patch(verifyTokenAndAdmin, updateBank);

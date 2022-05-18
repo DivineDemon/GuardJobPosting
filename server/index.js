@@ -12,6 +12,7 @@ import { router as guardRoute } from "./routes/guard.js";
 import { router as jobsRoute } from "./routes/jobs.js";
 import { router as shiftRoute } from "./routes/shift.js";
 import { router as authRoute } from "./routes/auth.js";
+import { router as profileRoute } from "./routes/profile.js";
 
 // Initializing Express App
 const app = express();
@@ -34,6 +35,7 @@ app.use("/guards", guardRoute);
 app.use("/jobs", jobsRoute);
 app.use("/shifts", shiftRoute);
 app.use("/auth", authRoute);
+app.use("/profile", profileRoute);
 
 // Starting the App
 const PORT = process.env.PORT || 5000;

@@ -1,6 +1,10 @@
 import express from "express";
-import { guardProfile } from "../controllers/profileController.js";
+import {
+  guardProfile,
+  companyProfile,
+} from "../controllers/profileController.js";
 
 export const router = express.Router();
 
-router.route("/:id").get(guardProfile);
+router.get("/guard/:id", guardProfile);
+router.get("/company/:id", companyProfile);

@@ -12,7 +12,7 @@ export const guardProfile = (req, res) => {
         `SELECT guard.guardID, guard.firstName, guard.middleName, guard.lastName, guard.email, guard.password, guard.phone, guard.dob, guard.gender, guard.emergencyContact, guard.isAdmin, guard.isGuard, guard.isCompany, guardaddress.guardAddressId, guardaddress.state, guardaddress.city, guardaddress.postalCode, document.documentID, document.four82, document.PCR, document.CPR, document.CrowdControl, document.License, document.Firearms, document.FirstAid, document.FirstAid, document.MediCare, document.Passport, document.ResponsibleAlcohol, document.Visa, document.WhiteCard, document.YellowCard, document.WorkingWithChildren, otherdocs.otherDocsId, otherdocs.name, otherdocs.document, bank.bankID, bank.bankName, bank.accountTitle, bank.accountNo, bank.bsb, bank.abn, shift.shiftID, shift.startTime, shift.endTime, shift.date FROM guard INNER JOIN guardaddress ON guard.guardID = guardaddress.fk_guard INNER JOIN document ON document.fk_guard = guard.guardID INNER JOIN bank ON bank.guard_id = guard.guardID INNER JOIN otherdocs ON otherdocs.fk_guard = guard.guardID INNER JOIN shift ON shift.fk_guard = guard.guardID WHERE guard.guardID=${id}`,
         function (err, rows) {
           if (!err) {
-            const accessToken = jwt.sign(
+            const guardToken = jwt.sign(
               {
                 id: rows[0].guardID,
                 isAdmin: rows[0].isAdmin,
@@ -27,7 +27,7 @@ export const guardProfile = (req, res) => {
             res.status(201).json({
               success: true,
               message: "Guard Logged In!",
-              profile: {
+              guardProfile: {
                 guard: {
                   guardID: rows[0].guardID,
                   firstName: rows[0].firstName,
@@ -80,12 +80,68 @@ export const guardProfile = (req, res) => {
                   },
                 ],
               },
-              accessToken,
+              guardToken,
             });
           } else {
             res
               .status(404)
               .json({ success: false, message: "Guard Not Found!" });
+          }
+        }
+      );
+    }
+  } catch (error) {
+    res.status(500);
+    throw new Error(error);
+  }
+};
+
+export const companyProfile = (req, res) => {
+  try {
+    const { id } = req.params; // company ID
+    let isAdmin = 0;
+    if (isAdmin === 0) {
+      connection.query(
+        `SELECT company.companyID, company.companyName, company.phone, company.email, company.isAdmin, company.isCompany, company.isGuard, companyaddress.state, companyaddress.city, companyaddress.postalCode, paymentcard.cardNumber, paymentcard.expDate, paymentcard.cvv FROM company INNER JOIN companyaddress ON companyaddress.fk_company = company.companyID INNER JOIN paymentcard ON paymentcard.fk_company = company.companyID WHERE company.companyID = ${id}`,
+        function (err, rows) {
+          if (!err) {
+            const companyToken = jwt.sign(
+              {
+                id: rows[0].companyID,
+                isAdmin: rows[0].isAdmin,
+                isGuard: rows[0].isGuard,
+                isCompany: rows[0].isCompany,
+              },
+              SECRET,
+              {
+                expiresIn: "3d",
+              }
+            );
+            res.status(201).json({
+              success: true,
+              message: "Company Logged In!",
+              companyProfile: {
+                company: {
+                  companyID: rows[0].companyID,
+                  companyName: rows[0].companyName,
+                  phone: rows[0].phone,
+                  email: rows[0].email,
+                  state: rows[0].state,
+                  city: rows[0].city,
+                  postalCode: rows[0].postalCode,
+                },
+                paymentCards: {
+                  cardNumber: rows[0].cardNumber,
+                  expDate: rows[0].expDate,
+                  cvv: rows[0].cvv,
+                },
+              },
+              companyToken,
+            });
+          } else {
+            res
+              .status(404)
+              .json({ success: false, message: "Company Not Found!" });
           }
         }
       );

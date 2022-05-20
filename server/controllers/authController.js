@@ -97,6 +97,7 @@ export const loginGuard = (req, res) => {
       connection.query(
         `SELECT guard.guardID, guard.firstName, guard.middleName, guard.lastName, guard.email, guard.password, guard.phone, guard.dob, guard.gender, guard.emergencyContact, guard.isAdmin, guard.isGuard, guard.isCompany, guardaddress.guardAddressId, guardaddress.state, guardaddress.city, guardaddress.postalCode, document.documentID, document.four82, document.PCR, document.CPR, document.CrowdControl, document.License, document.Firearms, document.FirstAid, document.FirstAid, document.MediCare, document.Passport, document.ResponsibleAlcohol, document.Visa, document.WhiteCard, document.YellowCard, document.WorkingWithChildren, otherdocs.otherDocsId, otherdocs.name, otherdocs.document, bank.bankID, bank.bankName, bank.accountTitle, bank.accountNo, bank.bsb, bank.abn, shift.shiftID, shift.startTime, shift.endTime, shift.date FROM guard INNER JOIN guardaddress ON guard.guardID = guardaddress.fk_guard INNER JOIN document ON document.fk_guard = guard.guardID INNER JOIN bank ON bank.guard_id = guard.guardID INNER JOIN otherdocs ON otherdocs.fk_guard = guard.guardID INNER JOIN shift ON shift.fk_guard = guard.guardID WHERE guard.email='${email}' && shift.date > '${Date.now()}'`,
         function (err, rows) {
+          console.log(rows[0]);
           if (!err && rows[0].password === password) {
             const accessToken = jwt.sign(
               {

@@ -59,7 +59,7 @@ export const updateOtherdocs = (req, res) => {
   const { id } = req.params;
   const { name, document } = req.body;
   connection.query(
-    `UPDATE otherdocs SET name='${name}', document='${document}' WHERE otherDocsID=${id}`,
+    `UPDATE otherdocs SET otherDocName='${name}', document='${document}' WHERE otherDocsID=${id}`,
     (err, rows) => {
       if (!err) {
         res

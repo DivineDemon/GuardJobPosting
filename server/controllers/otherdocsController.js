@@ -26,7 +26,7 @@ export const getOtherdoc = (req, res) => {
 export const addOtherdocs = (req, res) => {
   const { name, document } = req.body;
   connection.query(
-    `INSERT INTO otherdocs (name, document) VALUES ('${name}', '${document}')`,
+    `INSERT INTO otherdocs (otherDocName, document) VALUES ('${name}', '${document}')`,
     (err, rows, fields) => {
       if (!err) {
         res

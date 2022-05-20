@@ -1,7 +1,7 @@
 import { connection } from "../db.js";
 
 export const getGuards = (req, res) => {
-  connection.query("SELECT * FROM guard", (err, rows) => {
+  connection.query("SELECT * FROM guard ORDER BY status", (err, rows) => {
     if (!err) {
       res.status(201).json(rows);
     } else {

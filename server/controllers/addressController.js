@@ -33,6 +33,7 @@ export const addAddress = (req, res) => {
           success: true,
           message: "Address Inserted Successfully!",
           data: rows,
+          id: rows.insertId,
         });
       } else {
         res.status(500).json(err);

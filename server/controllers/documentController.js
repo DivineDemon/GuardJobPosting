@@ -47,7 +47,11 @@ export const addDocument = (req, res) => {
       if (!err) {
         res
           .status(201)
-          .json({ message: "Data Inserted Successfully!", data: rows });
+          .json({
+            message: "Data Inserted Successfully!",
+            data: rows,
+            id: rows.insertId,
+          });
       } else {
         res.status(500).json(err);
       }

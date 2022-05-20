@@ -13,6 +13,7 @@ export const addGuard = (req, res) => {
             success: true,
             data: {
               guard: {
+                id: rows.insertId,
                 info: req.body,
               },
               address: {},
@@ -186,8 +187,9 @@ export const loginCompany = (req, res) => {
     const { email, password, isAdmin } = req.body;
     if (isAdmin === 0) {
       connection.query(
-        `SELECT * FROM company WHERE email=${email}`,
+        `SELECT * FROM company WHERE email='${email}'`,
         function (err, rows) {
+          console.log(rows);
           if (!err && rows[0].password === password) {
             const accessToken = jwt.sign(
               {

@@ -27,7 +27,7 @@ export const addJob = (req, res) => {
   const { name, location, description, payrate, documentList, shifts } =
     req.body;
   connection.query(
-    `INSERT INTO jobs (name, location, description, payrate, documentList, shifts) VALUES ('${name}', '${location}', '${description}', ${payrate}, '${documentList}', '${shifts}')`,
+    `INSERT INTO jobs (jobName, location, description, payrate, documentList, shifts) VALUES ('${name}', '${location}', '${description}', ${payrate}, '${documentList}', '${shifts}')`,
     (err, rows, fields) => {
       if (!err) {
         res

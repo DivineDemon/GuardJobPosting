@@ -13,6 +13,7 @@ import { router as jobsRoute } from "./routes/jobs.js";
 import { router as shiftRoute } from "./routes/shift.js";
 import { router as authRoute } from "./routes/auth.js";
 import { router as profileRoute } from "./routes/profile.js";
+import { router as otherDocsRouter } from "./routes/otherDocs.js";
 
 // Initializing Express App
 const app = express();
@@ -36,6 +37,7 @@ app.use("/jobs", jobsRoute);
 app.use("/shifts", shiftRoute);
 app.use("/auth", authRoute);
 app.use("/profile", profileRoute);
+app.use("/otherDocs", otherDocsRouter);
 
 // Starting the App
 const PORT = process.env.PORT || 5000;

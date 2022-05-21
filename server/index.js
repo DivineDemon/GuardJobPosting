@@ -4,7 +4,9 @@ import "dotenv/config";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 
 // Importing Routes
-import { router as addressRoute } from "./routes/address.js";
+import { router as guardAddressRoute } from "./routes/guardAddress.js";
+import { router as jobAddressRoute } from "./routes/jobAddress.js";
+import { router as companyAddressRoute } from "./routes/companyAddress.js";
 import { router as bankRoute } from "./routes/bank.js";
 import { router as companyRoute } from "./routes/company.js";
 import { router as documentsRoute } from "./routes/documents.js";
@@ -28,7 +30,9 @@ app.use(errorHandler);
 // app.use("/", (req, res) => {
 //   res.status(200).json({ message: "Base URL Working!" });
 // });
-app.use("/addresses", addressRoute);
+app.use("/guardAddress", guardAddressRoute);
+app.use("/jobAddress", jobAddressRoute);
+app.use("/companyAddress", companyAddressRoute);
 app.use("/banks", bankRoute);
 app.use("/companies", companyRoute);
 app.use("/documents", documentsRoute);

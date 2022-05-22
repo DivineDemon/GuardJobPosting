@@ -19,7 +19,7 @@ export const getJobs = (req, res) => {
         });
         res.status(201).json({
           status: true,
-          message: "Succesfully Retrieved Jobs Data!"
+          message: "Succesfully Retrieved Jobs Data!",
           job: {
             ID: rows[i].jobsID,
             name: rows[i].jobName,

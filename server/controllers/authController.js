@@ -110,6 +110,15 @@ export const loginGuard = (req, res) => {
                 expiresIn: "3d",
               }
             );
+            const schedule = [];
+            rows.forEach((row, i) => {
+              const shift = {
+                shiftStartTime: rows[i].startTime,
+                shiftEndTime: rows[i].endTime,
+                shiftDate: rows[i].date,
+              };
+              schedule.push(shift);
+            });
             res.status(201).json({
               success: true,
               message: "Guard Logged In!",
@@ -158,13 +167,7 @@ export const loginGuard = (req, res) => {
                   bsb: rows[0].bsb,
                   abn: rows[0].abn,
                 },
-                schedule: [
-                  {
-                    shiftStartTime: rows[0].startTime,
-                    shiftEndTime: rows[0].endTime,
-                    shiftDate: rows[0].date,
-                  },
-                ],
+                schedule,
               },
               accessToken,
             });

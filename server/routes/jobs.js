@@ -9,9 +9,10 @@ import {
 import { verifyTokenAndCompany } from "../middleware/verifyToken.js";
 export const router = express.Router();
 
-router.route("/").get(getJobs).post(verifyTokenAndCompany, addJob);
+router.route("/").post(verifyTokenAndCompany, addJob);
 router
   .route("/:id")
+  .get(getJobs)
   .delete(verifyTokenAndCompany, deleteJob)
   .get(getJob)
   .patch(verifyTokenAndCompany, updateJob);

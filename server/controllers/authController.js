@@ -69,7 +69,7 @@ export const loginAdmin = (req, res) => {
               },
               SECRET,
               {
-                expiresIn: "3d",
+                expiresIn: "7d",
               }
             );
             res.status(201).json({
@@ -115,7 +115,7 @@ export const loginGuard = (req, res) => {
               },
               SECRET,
               {
-                expiresIn: "3d",
+                expiresIn: "7d",
               }
             );
             const schedule = [];
@@ -214,7 +214,7 @@ export const loginCompany = (req, res) => {
               },
               SECRET,
               {
-                expiresIn: "3d",
+                expiresIn: "7d",
               }
             );
             res.status(201).json({

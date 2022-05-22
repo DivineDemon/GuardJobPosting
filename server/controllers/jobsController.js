@@ -1,13 +1,41 @@
 import { connection } from "../db.js";
 
 export const getJobs = (req, res) => {
-  connection.query("SELECT * FROM jobs", (err, rows) => {
-    if (!err) {
-      res.status(201).json(rows);
-    } else {
-      res.status(500).json(err);
+  const { id } = req.params; // job ID
+  connection.query(
+    `SELECT jobs.jobsID, jobs.jobName, jobs.lat, jobs.lng, jobs.description, jobs.payrate, jobs.documentList, shift.shiftID, shift.startTime, shift.endTime, shift.date, shift.isBooked FROM jobs INNER JOIN shift ON jobs.jobsID = ${id}`,
+    (err, rows) => {
+      if (!err) {
+        const shifts = [];
+        rows.forEach((row, i) => {
+          const shift = {
+            shiftID: rows[i].shiftID,
+            shiftStartTime: rows[i].startTime,
+            shiftEndTime: rows[i].endTime,
+            shiftDate: rows[i].date,
+            isBooked: rows[i].isBooked,
+          };
+          shifts.push(shift);
+        });
+        res.status(201).json({
+          status: true,
+          message: "Succesfully Retrieved Jobs Data!"
+          job: {
+            ID: rows[i].jobsID,
+            name: rows[i].jobName,
+            lat: rows[i].lat,
+            lng: rows[i].lng,
+            description: rows[i].description,
+            payrate: rows[i].payrate,
+            documentList: rows[i].documentList,
+          },
+          shifts,
+        });
+      } else {
+        res.status(500).json(err);
+      }
     }
-  });
+  );
 };
 
 export const getJob = (req, res) => {

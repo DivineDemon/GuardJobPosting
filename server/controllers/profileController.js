@@ -24,6 +24,15 @@ export const guardProfile = (req, res) => {
                 expiresIn: "3d",
               }
             );
+            const schedule = [];
+            rows.forEach((row, i) => {
+              const shift = {
+                shiftStartTime: rows[i].startTime,
+                shiftEndTime: rows[i].endTime,
+                shiftDate: rows[i].date,
+              };
+              schedule.push(shift);
+            });
             res.status(201).json({
               success: true,
               message: "Guard Logged In!",
@@ -72,13 +81,7 @@ export const guardProfile = (req, res) => {
                   bsb: rows[0].bsb,
                   abn: rows[0].abn,
                 },
-                schedule: [
-                  {
-                    shiftStartTime: rows[0].startTime,
-                    shiftEndTime: rows[0].endTime,
-                    shiftDate: rows[0].date,
-                  },
-                ],
+                schedule,
               },
               guardToken,
             });
@@ -117,6 +120,15 @@ export const companyProfile = (req, res) => {
                 expiresIn: "3d",
               }
             );
+            const paymentCards = [];
+            rows.forEach((row, i) => {
+              const card = {
+                cardNumber: rows[i].cardNumber,
+                expDate: rows[i].expDate,
+                cvv: rows[i].cvv,
+              };
+              paymentCards.push(card);
+            });
             res.status(201).json({
               success: true,
               message: "Company Logged In!",
@@ -130,11 +142,7 @@ export const companyProfile = (req, res) => {
                   city: rows[0].city,
                   postalCode: rows[0].postalCode,
                 },
-                paymentCards: {
-                  cardNumber: rows[0].cardNumber,
-                  expDate: rows[0].expDate,
-                  cvv: rows[0].cvv,
-                },
+                paymentCards,
               },
               companyToken,
             });

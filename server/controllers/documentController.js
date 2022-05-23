@@ -34,7 +34,6 @@ export const addDocument = (req, res) => {
     firearms,
     firstaid,
     medicare,
-    others,
     passport,
     responsiblealcohol,
     visa,
@@ -43,7 +42,7 @@ export const addDocument = (req, res) => {
     workingwithchildren,
   } = req.body;
   connection.query(
-    `INSERT INTO document (four82, PCR, CPR, CrowdControl, License, Firearms, FirstAid, MediCare, Others, Passport, ResponsibleAlcohol, Visa, WhiteCard, YellowCard, WorkingWithChildren, fk_guard) VALUES ('${four82}', '${pcr}', '${cpr}', '${crowdcontrol}', '${license}', '${firearms}', '${firstaid}', '${medicare}', '${others}', '${passport}', '${responsiblealcohol}', '${visa}', '${whitecard}', '${yellowcard}', '${workingwithchildren}', ${guard_id})`,
+    `INSERT INTO document (four82, PCR, CPR, CrowdControl, License, Firearms, FirstAid, MediCare, Passport, ResponsibleAlcohol, Visa, WhiteCard, YellowCard, WorkingWithChildren, fk_guard) VALUES ('${four82}', '${pcr}', '${cpr}', '${crowdcontrol}', '${license}', '${firearms}', '${firstaid}', '${medicare}', '${passport}', '${responsiblealcohol}', '${visa}', '${whitecard}', '${yellowcard}', '${workingwithchildren}', ${guard_id})`,
     (err, rows, fields) => {
       if (!err) {
         res.status(201).json({
@@ -92,7 +91,7 @@ export const updateDocument = (req, res) => {
     workingwithchildren,
   } = req.body;
   connection.query(
-    `UPDATE document SET four82='${four82}', PCR='${pcr}', CPR='${cpr}', CrowdControl='${crowdcontrol}', License='${license}', Firearms='${firearms}', FirstAid='${firstaid}', MediCare='${medicare}', Others='${others}', Passport='${passport}', ResponsibleAlcohol='${responsiblealcohol}', Visa='${visa}', WhiteCard='${whitecard}', YellowCard='${yellowcard}', WorkingWithChildren='${workingwithchildren}', fk_guard=${guard_id} WHERE documentID=${document_id}`,
+    `UPDATE document SET four82='${four82}', PCR='${pcr}', CPR='${cpr}', CrowdControl='${crowdcontrol}', License='${license}', Firearms='${firearms}', FirstAid='${firstaid}', MediCare='${medicare}', Passport='${passport}', ResponsibleAlcohol='${responsiblealcohol}', Visa='${visa}', WhiteCard='${whitecard}', YellowCard='${yellowcard}', WorkingWithChildren='${workingwithchildren}', fk_guard=${guard_id} WHERE documentID=${document_id}`,
     (err, rows) => {
       if (!err) {
         res.status(201).json({ message: "Document Updated Successfully!" });

@@ -13,9 +13,12 @@ import {
 
 export const router = express.Router();
 
-router.route("/").get(getCompanyAddresses).post(addCompanyAddress);
+router.route("/").get(getCompanyAddresses);
 router
   .route("/:id")
   .delete(verifyTokenAndAdmin, deleteCompanyAddress)
-  .get(getCompanyAddress)
+  .get(getCompanyAddress);
+router.route("/:company_id").post(addCompanyAddress);
+router
+  .route("/:address_id/:company_id")
   .patch(verifyTokenAndCompany, updateCompanyAddress);

@@ -52,10 +52,10 @@ export const deleteShift = (req, res) => {
 };
 
 export const updateShift = (req, res) => {
-  const { id, job_id, guard_id } = req.params;
+  const { shift_id, job_id, guard_id } = req.params;
   const { startTime, endTime, date } = req.body;
   connection.query(
-    `UPDATE shift SET startTime='${startTime}', endTime='${endTime}', date='${date}', fk_job=${job_id}, fk_guard=${guard_id} WHERE shiftID=${id}`,
+    `UPDATE shift SET startTime='${startTime}', endTime='${endTime}', date='${date}', fk_job=${job_id}, fk_guard=${guard_id} WHERE shiftID=${shift_id}`,
     (err, rows) => {
       if (!err) {
         res.status(201).json({ message: "Shift Updated Successfully!" });

@@ -13,9 +13,12 @@ import {
 
 export const router = express.Router();
 
-router.route("/").get(getGuardAddresses).post(addGuardAddress);
+router.route("/").get(getGuardAddresses);
 router
   .route("/:id")
   .delete(verifyTokenAndAdmin, deleteGuardAddress)
-  .get(getGuardAddress)
+  .get(getGuardAddress);
+router.route("/:guard_id").post(addGuardAddress);
+router
+  .route("/:address_id/:guard_id")
   .patch(verifyTokenAndGuard, updateGuardAddress);

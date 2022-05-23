@@ -112,11 +112,11 @@ export const deleteJob = (req, res) => {
 };
 
 export const updateJob = (req, res) => {
-  const { id, company_id, address_id } = req.params;
+  const { job_id, company_id, address_id } = req.params;
   const { name, location, description, payrate, documentList, shifts } =
     req.body;
   connection.query(
-    `UPDATE jobs SET name='${name}', location='${location}', description='${description}', payrate=${payrate}, documentList='${documentList}', shifts='${shifts}', companyfk=${company_id}, addressfk=${address_id} WHERE jobsID=${id}`,
+    `UPDATE jobs SET name='${name}', location='${location}', description='${description}', payrate=${payrate}, documentList='${documentList}', shifts='${shifts}', companyfk=${company_id}, addressfk=${address_id} WHERE jobsID=${job_id}`,
     (err, rows) => {
       if (!err) {
         res.status(201).json({ message: "Job Updated Successfully!" });

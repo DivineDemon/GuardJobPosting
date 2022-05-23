@@ -24,7 +24,7 @@ export const getDocument = (req, res) => {
 };
 
 export const addDocument = (req, res) => {
-  const { id } = req.params; // guard ID
+  const { guard_id } = req.params; // guard ID
   const {
     four82,
     pcr,

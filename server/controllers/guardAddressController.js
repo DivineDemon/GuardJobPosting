@@ -25,8 +25,9 @@ export const getGuardAddress = (req, res) => {
 
 export const addGuardAddress = (req, res) => {
   const { state, city, postalCode } = req.body;
+  const { guard_id } = req.params;
   connection.query(
-    `INSERT INTO guardaddress (state, city, postalCode) VALUES ('${state}', '${city}', '${postalCode}')`,
+    `INSERT INTO guardaddress (state, city, postalCode, fk_guard) VALUES ('${state}', '${city}', '${postalCode}', ${guard_id})`,
     (err, rows, fields) => {
       if (!err) {
         res.status(201).json({
@@ -59,9 +60,9 @@ export const deleteGuardAddress = (req, res) => {
 };
 
 export const updateGuardAddress = (req, res) => {
-  const { id } = req.params;
+  const { address_id, guard_id } = req.params;
   connection.query(
-    `UPDATE guardaddress SET state='${req.body.state}', city='${req.body.city}', postalCode='${req.body.postalCode}' WHERE guardAddressId=${id}`,
+    `UPDATE guardaddress SET state='${req.body.state}', city='${req.body.city}', postalCode='${req.body.postalCode}', fk_guard=${guard_id} WHERE guardAddressId=${address_id}`,
     (err, rows) => {
       if (!err) {
         res

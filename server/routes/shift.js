@@ -9,9 +9,9 @@ import {
 import { verifyTokenAndCompany } from "../middleware/verifyToken.js";
 export const router = express.Router();
 
-router.route("/").get(getShifts).post(verifyTokenAndCompany, addShift);
+router.route("/").get(getShifts);
+router.route("/:id").delete(verifyTokenAndCompany, deleteShift).get(getShift);
+router.route("/:job_id/:guard_id").post(verifyTokenAndCompany, addShift);
 router
-  .route("/:id")
-  .delete(verifyTokenAndCompany, deleteShift)
-  .get(getShift)
+  .route("/:shift_id/:job_id/:guard_id")
   .patch(verifyTokenAndCompany, updateShift);

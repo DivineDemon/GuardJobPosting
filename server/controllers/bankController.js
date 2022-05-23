@@ -52,9 +52,9 @@ export const getBank = (req, res) => {
 
 export const addBank = (req, res) => {
   const { name, accountTitle, accountNo, bsb, abn } = req.body;
-  const { id } = req.params; // guard ID
+  const { guard_id } = req.params; // guard ID
   connection.query(
-    `INSERT INTO bank (bankName, accountTitle, accountNo, bsb, abn, guard_id) VALUES ('${name}', '${accountTitle}', ${accountNo}, ${bsb}, ${abn}, ${id})`,
+    `INSERT INTO bank (bankName, accountTitle, accountNo, bsb, abn, guard_id) VALUES ('${name}', '${accountTitle}', ${accountNo}, ${bsb}, ${abn}, ${guard_id})`,
     (err, rows, fields) => {
       if (!err) {
         res

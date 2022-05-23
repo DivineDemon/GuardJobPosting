@@ -24,10 +24,10 @@ export const getCompanyAddress = (req, res) => {
 };
 
 export const addCompanyAddress = (req, res) => {
-  const { id } = req.params; // ccompany ID
+  const { company_id } = req.params; // company ID
   const { state, city, postalCode } = req.body;
   connection.query(
-    `INSERT INTO companyaddress (state, city, postalCode, fk_company) VALUES ('${state}', '${city}', '${postalCode}', ${id})`,
+    `INSERT INTO companyaddress (state, city, postalCode, fk_company) VALUES ('${state}', '${city}', '${postalCode}', ${company_id})`,
     (err, rows, fields) => {
       if (!err) {
         res.status(201).json({

@@ -13,12 +13,7 @@ import {
 
 export const router = express.Router();
 
-router
-  .route("/")
-  .get(verifyTokenAndAdmin, getBanks)
-  .post(verifyTokenAndGuard, addBank);
-router
-  .route("/:id")
-  .delete(verifyTokenAndAdmin, deleteBank)
-  .get(getBank)
-  .patch(verifyTokenAndAdmin, updateBank);
+router.route("/").get(verifyTokenAndAdmin, getBanks);
+router.route("/:id").delete(verifyTokenAndAdmin, deleteBank).get(getBank);
+router.route("/:guard_id").post(verifyTokenAndGuard, addBank);
+router.route("/:bank_id/:guard_id").patch(verifyTokenAndAdmin, updateBank);

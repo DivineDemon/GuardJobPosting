@@ -24,10 +24,10 @@ export const getJobAddress = (req, res) => {
 };
 
 export const addJobAddress = (req, res) => {
-  const { id } = req.params; // job ID
+  const { job_id } = req.params; // job ID
   const { state, city, postalCode } = req.body;
   connection.query(
-    `INSERT INTO jobaddress (state, city, postalCode, fk_job) VALUES ('${state}', '${city}', '${postalCode}', ${id})`,
+    `INSERT INTO jobaddress (state, city, postalCode, fk_job) VALUES ('${state}', '${city}', '${postalCode}', ${job_id})`,
     (err, rows, fields) => {
       if (!err) {
         res.status(201).json({
@@ -58,9 +58,9 @@ export const deleteJobAddress = (req, res) => {
 };
 
 export const updateJobAddress = (req, res) => {
-  const { id, job_id } = req.params;
+  const { address_id, job_id } = req.params;
   connection.query(
-    `UPDATE jobaddress SET state='${req.body.state}', city='${req.body.city}', postalCode='${req.body.postalCode}', fk_job=${job_id} WHERE jobAddressId=${id}`,
+    `UPDATE jobaddress SET state='${req.body.state}', city='${req.body.city}', postalCode='${req.body.postalCode}', fk_job=${job_id} WHERE jobAddressId=${address_id}`,
     (err, rows) => {
       if (!err) {
         res.status(201).json({ message: "Job Address Updated Successfully!" });

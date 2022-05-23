@@ -10,11 +10,6 @@ import { verifyTokenAndGuard } from "../middleware/verifyToken.js";
 export const router = express.Router();
 
 router.route("/").get(getDocuments);
-router
-  .route("/:id")
-  .delete(verifyTokenAndGuard, deleteDocument)
-  .get(getDocument);
+router.route("/:id").delete(deleteDocument).get(getDocument);
 router.route("/:guard_id").post(addDocument);
-router
-  .route("/:guard_id/:document_id")
-  .patch(verifyTokenAndGuard, updateDocument);
+router.route("/:guard_id/:document_id").patch(updateDocument);

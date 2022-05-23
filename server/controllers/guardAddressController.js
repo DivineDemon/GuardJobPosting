@@ -31,7 +31,7 @@ export const addGuardAddress = (req, res) => {
       if (!err) {
         res.status(201).json({
           success: true,
-          message: "GuardAddress Inserted Successfully!",
+          message: "Guard Address Inserted Successfully!",
           data: rows,
           id: rows.insertId,
         });

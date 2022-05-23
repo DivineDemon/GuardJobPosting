@@ -25,8 +25,9 @@ export const getShift = (req, res) => {
 
 export const addShift = (req, res) => {
   const { startTime, endTime, date } = req.body;
+  const { job_id, guard_id } = req.params;
   connection.query(
-    `INSERT INTO shift (startTime, endTime, date) VALUES ('${startTime}', '${endTime}', '${date}')`,
+    `INSERT INTO shift (startTime, endTime, date, fk_job, fk_guard) VALUES ('${startTime}', '${endTime}', '${date}', ${job_id}, ${guard_id})`,
     (err, rows, fields) => {
       if (!err) {
         res
@@ -51,10 +52,10 @@ export const deleteShift = (req, res) => {
 };
 
 export const updateShift = (req, res) => {
-  const { id } = req.params;
+  const { id, job_id, guard_id } = req.params;
   const { startTime, endTime, date } = req.body;
   connection.query(
-    `UPDATE shift SET startTime='${startTime}', endTime='${endTime}', date='${date}' WHERE shiftID=${id}`,
+    `UPDATE shift SET startTime='${startTime}', endTime='${endTime}', date='${date}', fk_job=${job_id}, fk_guard=${guard_id} WHERE shiftID=${id}`,
     (err, rows) => {
       if (!err) {
         res.status(201).json({ message: "Shift Updated Successfully!" });

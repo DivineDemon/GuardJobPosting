@@ -24,9 +24,10 @@ export const getCompanyAddress = (req, res) => {
 };
 
 export const addCompanyAddress = (req, res) => {
+  const { id } = req.params; // ccompany ID
   const { state, city, postalCode } = req.body;
   connection.query(
-    `INSERT INTO companyaddress (state, city, postalCode) VALUES ('${state}', '${city}', '${postalCode}')`,
+    `INSERT INTO companyaddress (state, city, postalCode, fk_company) VALUES ('${state}', '${city}', '${postalCode}', ${id})`,
     (err, rows, fields) => {
       if (!err) {
         res.status(201).json({
@@ -59,9 +60,9 @@ export const deleteCompanyAddress = (req, res) => {
 };
 
 export const updateCompanyAddress = (req, res) => {
-  const { id } = req.params;
+  const { address_id, company_id } = req.params;
   connection.query(
-    `UPDATE companyaddress SET state='${req.body.state}', city='${req.body.city}', postalCode='${req.body.postalCode}' WHERE companyAddressId=${id}`,
+    `UPDATE companyaddress SET state='${req.body.state}', city='${req.body.city}', postalCode='${req.body.postalCode}', fk_company=${company_id} WHERE companyAddressId=${address_id}`,
     (err, rows) => {
       if (!err) {
         res

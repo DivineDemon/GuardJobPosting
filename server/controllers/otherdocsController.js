@@ -25,8 +25,9 @@ export const getOtherdoc = (req, res) => {
 
 export const addOtherdocs = (req, res) => {
   const { name, document } = req.body;
+  const { id } = req.params; // guard ID
   connection.query(
-    `INSERT INTO otherdocs (otherDocName, document) VALUES ('${name}', '${document}')`,
+    `INSERT INTO otherdocs (otherDocName, document, fk_guard) VALUES ('${name}', '${document}', ${id})`,
     (err, rows, fields) => {
       if (!err) {
         res
@@ -56,10 +57,10 @@ export const deleteOtherdocs = (req, res) => {
 };
 
 export const updateOtherdocs = (req, res) => {
-  const { id } = req.params;
+  const { id, guard_id } = req.params;
   const { name, document } = req.body;
   connection.query(
-    `UPDATE otherdocs SET otherDocName='${name}', document='${document}' WHERE otherDocsID=${id}`,
+    `UPDATE otherdocs SET otherDocName='${name}', document='${document}', fk_guard=${guard_id} WHERE otherDocsID=${id}`,
     (err, rows) => {
       if (!err) {
         res

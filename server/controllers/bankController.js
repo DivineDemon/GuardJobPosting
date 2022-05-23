@@ -52,8 +52,9 @@ export const getBank = (req, res) => {
 
 export const addBank = (req, res) => {
   const { name, accountTitle, accountNo, bsb, abn } = req.body;
+  const { id } = req.params; // guard ID
   connection.query(
-    `INSERT INTO bank (bankName, accountTitle, accountNo, bsb, abn) VALUES ('${name}', '${accountTitle}', ${accountNo}, ${bsb}, ${abn})`,
+    `INSERT INTO bank (bankName, accountTitle, accountNo, bsb, abn, guard_id) VALUES ('${name}', '${accountTitle}', ${accountNo}, ${bsb}, ${abn}, ${id})`,
     (err, rows, fields) => {
       if (!err) {
         res
@@ -78,10 +79,10 @@ export const deleteBank = (req, res) => {
 };
 
 export const updateBank = (req, res) => {
-  const { id } = req.params;
+  const { bank_id, guard_id } = req.params;
   const { name, accountTitle, accountNo, bsb, abn } = req.body;
   connection.query(
-    `UPDATE bank SET bankName='${name}', accountTitle='${accountTitle}', accountNo=${accountNo}, bsb=${bsb}, abn=${abn} WHERE bankID=${id}`,
+    `UPDATE bank SET bankName='${name}', accountTitle='${accountTitle}', accountNo=${accountNo}, bsb=${bsb}, abn=${abn}, guard_id=${guard_id} WHERE bankID=${bank_id}`,
     (err, rows) => {
       if (!err) {
         res.status(201).json({ message: "Bank Updated Successfully!" });

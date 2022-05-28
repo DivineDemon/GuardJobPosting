@@ -25,33 +25,40 @@ export const getDocument = (req, res) => {
 
 export const addDocument = (req, res) => {
   const { guard_id } = req.params; // guard ID
-  const {
-    four82,
-    pcr,
-    cpr,
-    crowdcontrol,
-    license,
-    firearms,
-    firstaid,
-    medicare,
-    passport,
-    responsiblealcohol,
-    visa,
-    whitecard,
-    yellowcard,
-    workingwithchildren,
-  } = req.body;
+  const { document_name, base_64 } = req.body; // document name and base 64
   connection.query(
-    `INSERT INTO document (four82, PCR, CPR, CrowdControl, License, Firearms, FirstAid, MediCare, Passport, ResponsibleAlcohol, Visa, WhiteCard, YellowCard, WorkingWithChildren, fk_guard) VALUES ('${four82}', '${pcr}', '${cpr}', '${crowdcontrol}', '${license}', '${firearms}', '${firstaid}', '${medicare}', '${passport}', '${responsiblealcohol}', '${visa}', '${whitecard}', '${yellowcard}', '${workingwithchildren}', ${guard_id})`,
-    (err, rows, fields) => {
-      if (!err) {
-        res.status(201).json({
-          message: "Data Inserted Successfully!",
-          data: rows,
-          id: rows.insertId,
-        });
+    `SELECT * FROM document WHERE fk_guard=${guard_id}`,
+    (err, rows) => {
+      if (rows.length > 0) {
+        connection.query(
+          `UPDATE document SET ${document_name} = '${base_64}' WHERE fk_guard=${guard_id}`,
+          (err, rows) => {
+            if (!err) {
+              res.status(201).json({
+                message: "Data Updated Successfully!",
+                data: rows,
+                id: rows.insertId,
+              });
+            } else {
+              res.status(500).json(err);
+            }
+          }
+        );
       } else {
-        res.status(500).json(err);
+        connection.query(
+          `INSERT INTO document (${document_name}, fk_guard) VALUES ('${base_64}', ${guard_id})`,
+          (err, rows) => {
+            if (!err) {
+              res.status(201).json({
+                message: "Data Inserted Successfully!",
+                data: rows,
+                id: rows.insertId,
+              });
+            } else {
+              res.status(500).json(err);
+            }
+          }
+        );
       }
     }
   );
@@ -71,33 +78,33 @@ export const deleteDocument = (req, res) => {
   );
 };
 
-export const updateDocument = (req, res) => {
-  const { document_id, guard_id } = req.params;
-  const {
-    four82,
-    pcr,
-    cpr,
-    crowdcontrol,
-    license,
-    firearms,
-    firstaid,
-    medicare,
-    others,
-    passport,
-    responsiblealcohol,
-    visa,
-    whitecard,
-    yellowcard,
-    workingwithchildren,
-  } = req.body;
-  connection.query(
-    `UPDATE document SET four82='${four82}', PCR='${pcr}', CPR='${cpr}', CrowdControl='${crowdcontrol}', License='${license}', Firearms='${firearms}', FirstAid='${firstaid}', MediCare='${medicare}', Passport='${passport}', ResponsibleAlcohol='${responsiblealcohol}', Visa='${visa}', WhiteCard='${whitecard}', YellowCard='${yellowcard}', WorkingWithChildren='${workingwithchildren}', fk_guard=${guard_id} WHERE documentID=${document_id}`,
-    (err, rows) => {
-      if (!err) {
-        res.status(201).json({ message: "Document Updated Successfully!" });
-      } else {
-        res.status(500).json(err);
-      }
-    }
-  );
-};
+// export const updateDocument = (req, res) => {
+//   const { document_id, guard_id } = req.params;
+//   const {
+//     four82,
+//     pcr,
+//     cpr,
+//     crowdcontrol,
+//     license,
+//     firearms,
+//     firstaid,
+//     medicare,
+//     others,
+//     passport,
+//     responsiblealcohol,
+//     visa,
+//     whitecard,
+//     yellowcard,
+//     workingwithchildren,
+//   } = req.body;
+//   connection.query(
+//     `UPDATE document SET four82='${four82}', PCR='${pcr}', CPR='${cpr}', CrowdControl='${crowdcontrol}', License='${license}', Firearms='${firearms}', FirstAid='${firstaid}', MediCare='${medicare}', Passport='${passport}', ResponsibleAlcohol='${responsiblealcohol}', Visa='${visa}', WhiteCard='${whitecard}', YellowCard='${yellowcard}', WorkingWithChildren='${workingwithchildren}', fk_guard=${guard_id} WHERE documentID=${document_id}`,
+//     (err, rows) => {
+//       if (!err) {
+//         res.status(201).json({ message: "Document Updated Successfully!" });
+//       } else {
+//         res.status(500).json(err);
+//       }
+//     }
+//   );
+// };

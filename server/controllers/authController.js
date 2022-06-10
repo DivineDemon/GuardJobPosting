@@ -11,10 +11,17 @@ export const addGuard = (req, res) => {
         if (!err) {
           res.status(201).json({
             success: true,
-            data: {
+            guardProfile: {
               guard: {
-                id: rows.insertId,
-                info: req.body,
+                guardID: rows.insertId,
+                firstName: req.body.firstName,
+              	middleName: req.body.middleName,
+              	lastName: req.body.lastName,
+              	email: req.body.email,
+              	phone: req.body.phone,
+              	dob: req.body.dob,
+              	gender: req.body.gender,
+              	emergencyContact: req.body.emergencyContact,
               },
               address: {},
               documents: {},

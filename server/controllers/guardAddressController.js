@@ -1,6 +1,6 @@
-import { connection } from "../db.js";
+const { connection } = require("../db");
 
-export const getGuardAddresses = (req, res) => {
+const getGuardAddresses = (req, res) => {
   connection.query("SELECT * FROM guardaddress", (err, rows) => {
     if (!err) {
       res.status(201).json(rows);
@@ -10,7 +10,7 @@ export const getGuardAddresses = (req, res) => {
   });
 };
 
-export const getGuardAddress = (req, res) => {
+const getGuardAddress = (req, res) => {
   connection.query(
     `SELECT * FROM guardaddress WHERE guardAddressId=${req.params.id}`,
     (err, rows) => {
@@ -23,7 +23,7 @@ export const getGuardAddress = (req, res) => {
   );
 };
 
-export const addGuardAddress = (req, res) => {
+const addGuardAddress = (req, res) => {
   const { state, city, postalCode } = req.body;
   const { guard_id } = req.params;
   connection.query(
@@ -43,7 +43,7 @@ export const addGuardAddress = (req, res) => {
   );
 };
 
-export const deleteGuardAddress = (req, res) => {
+const deleteGuardAddress = (req, res) => {
   const { id } = req.params;
   connection.query(
     `DELETE FROM guardaddress WHERE guardAddressId=${id}`,
@@ -59,7 +59,7 @@ export const deleteGuardAddress = (req, res) => {
   );
 };
 
-export const updateGuardAddress = (req, res) => {
+const updateGuardAddress = (req, res) => {
   const { address_id, guard_id } = req.params;
   connection.query(
     `UPDATE guardaddress SET state='${req.body.state}', city='${req.body.city}', postalCode='${req.body.postalCode}', fk_guard=${guard_id} WHERE guardAddressId=${address_id}`,
@@ -73,4 +73,12 @@ export const updateGuardAddress = (req, res) => {
       }
     }
   );
+};
+
+module.exports = {
+  getGuardAddresses,
+  getGuardAddress,
+  addGuardAddress,
+  deleteGuardAddress,
+  updateGuardAddress,
 };

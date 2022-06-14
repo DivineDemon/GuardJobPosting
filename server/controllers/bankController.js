@@ -1,7 +1,7 @@
-import { connection } from "../db.js";
+const { connection } = require("../db");
 const rowsPerPage = process.env.ROWS || 25;
 
-export const getBanks = (req, res) => {
+const getBanks = (req, res) => {
   connection.query("SELECT * FROM bank", (err, rows) => {
     if (err) {
       res.status(500).json(err);
@@ -37,7 +37,7 @@ export const getBanks = (req, res) => {
   });
 };
 
-export const getBank = (req, res) => {
+const getBank = (req, res) => {
   connection.query(
     `SELECT * FROM bank WHERE bankID=${req.params.id}`,
     (err, rows) => {
@@ -50,7 +50,7 @@ export const getBank = (req, res) => {
   );
 };
 
-export const addBank = (req, res) => {
+const addBank = (req, res) => {
   const { name, accountTitle, accountNo, bsb, abn } = req.body;
   const { guard_id } = req.params; // guard ID
   connection.query(
@@ -67,7 +67,7 @@ export const addBank = (req, res) => {
   );
 };
 
-export const deleteBank = (req, res) => {
+const deleteBank = (req, res) => {
   const { id } = req.params;
   connection.query(`DELETE FROM bank WHERE bankID=${id}`, (err, rows) => {
     if (!err) {
@@ -78,7 +78,7 @@ export const deleteBank = (req, res) => {
   });
 };
 
-export const updateBank = (req, res) => {
+const updateBank = (req, res) => {
   const { bank_id, guard_id } = req.params;
   const { name, accountTitle, accountNo, bsb, abn } = req.body;
   connection.query(
@@ -91,4 +91,12 @@ export const updateBank = (req, res) => {
       }
     }
   );
+};
+
+module.exports = {
+  getBanks,
+  getBank,
+  addBank,
+  deleteBank,
+  updateBank,
 };

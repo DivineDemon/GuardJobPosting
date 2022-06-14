@@ -1,6 +1,6 @@
-import { connection } from "../db.js";
+const { connection } = require("../db");
 
-export const getJobs = (req, res) => {
+const getJobs = (req, res) => {
   const { id } = req.params; // job ID
   connection.query(
     `SELECT jobs.jobsID, jobs.jobName, jobs.lat, jobs.lng, jobs.description, jobs.payrate, jobs.documentList, shift.shiftID, shift.startTime, shift.endTime, shift.date, shift.isBooked FROM jobs INNER JOIN shift WHERE shift.fk_job = jobs.jobsID`,
@@ -44,7 +44,7 @@ export const getJobs = (req, res) => {
   );
 };
 
-export const getJob = (req, res) => {
+const getJob = (req, res) => {
   const { id } = req.params; // job ID
   connection.query(
     `SELECT jobs.jobsID, jobs.jobName, jobs.lat, jobs.lng, jobs.description, jobs.payrate, jobs.documentList, shift.shiftID, shift.startTime, shift.endTime, shift.date, shift.isBooked FROM jobs INNER JOIN shift ON jobs.jobsID = ${id}`,
@@ -82,7 +82,7 @@ export const getJob = (req, res) => {
   );
 };
 
-export const addJob = (req, res) => {
+const addJob = (req, res) => {
   const { company_id, address_id } = req.params;
   const { name, location, description, payrate, documentList, shifts } =
     req.body;
@@ -100,7 +100,7 @@ export const addJob = (req, res) => {
   );
 };
 
-export const deleteJob = (req, res) => {
+const deleteJob = (req, res) => {
   const { id } = req.params;
   connection.query(`DELETE FROM jobs WHERE jobsID=${id}`, (err, rows) => {
     if (!err) {
@@ -111,7 +111,7 @@ export const deleteJob = (req, res) => {
   });
 };
 
-export const updateJob = (req, res) => {
+const updateJob = (req, res) => {
   const { job_id, company_id, address_id } = req.params;
   const { name, location, description, payrate, documentList, shifts } =
     req.body;
@@ -125,4 +125,12 @@ export const updateJob = (req, res) => {
       }
     }
   );
+};
+
+module.exports = {
+  getJobs,
+  getJob,
+  addJob,
+  deleteJob,
+  updateJob,
 };

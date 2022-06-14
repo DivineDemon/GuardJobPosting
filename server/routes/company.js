@@ -1,16 +1,16 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getCompanies,
   deleteCompany,
   getCompany,
   updateCompany,
-} from "../controllers/companyController.js";
-import {
+} = require("../controllers/companyController");
+const {
   verifyTokenAndAdmin,
   verifyTokenAndCompany,
-} from "../middleware/verifyToken.js";
+} = require("../middleware/verifyToken");
 
-export const router = express.Router();
+const router = express.Router();
 
 router.route("/").get(verifyTokenAndAdmin, getCompanies);
 router
@@ -18,3 +18,5 @@ router
   .delete(verifyTokenAndAdmin, deleteCompany)
   .get(verifyTokenAndAdmin, getCompany)
   .patch(verifyTokenAndCompany, updateCompany);
+
+module.exports = router;

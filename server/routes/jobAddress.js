@@ -1,17 +1,17 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getJobAddresses,
   addJobAddress,
   deleteJobAddress,
   getJobAddress,
   updateJobAddress,
-} from "../controllers/jobAddressController.js";
-import {
+} = require("../controllers/jobAddressController");
+const {
   verifyTokenAndAdmin,
   verifyTokenAndCompany,
-} from "../middleware/verifyToken.js";
+} = require("../middleware/verifyToken");
 
-export const router = express.Router();
+const router = express.Router();
 
 router.route("/").get(getJobAddresses);
 router
@@ -22,3 +22,5 @@ router.route("/:job_id").post(addJobAddress);
 router
   .route("/:address_id/:job_id")
   .patch(verifyTokenAndCompany, updateJobAddress);
+
+module.exports = router

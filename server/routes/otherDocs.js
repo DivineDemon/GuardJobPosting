@@ -1,16 +1,16 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getOtherdocs,
   addOtherdocs,
   deleteOtherdocs,
   updateOtherdocs,
-} from "../controllers/otherdocsController.js";
-import {
+} = require("../controllers/otherdocsController");
+const {
   verifyTokenAndGuard,
   verifyTokenAndAdmin,
-} from "../middleware/verifyToken.js";
+} = require("../middleware/verifyToken");
 
-export const router = express.Router();
+const router = express.Router();
 
 router.route("/").get(verifyTokenAndAdmin, getOtherdocs);
 router.route("/:id").delete(verifyTokenAndGuard, deleteOtherdocs);
@@ -18,3 +18,5 @@ router.route("/:guard_id").post(verifyTokenAndGuard, addOtherdocs);
 router
   .route("/:document_id/:guard_id")
   .patch(verifyTokenAndGuard, updateOtherdocs);
+
+module.exports = router;

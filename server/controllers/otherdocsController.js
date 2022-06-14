@@ -1,6 +1,6 @@
-import { connection } from "../db.js";
+const { connection } = require("../db");
 
-export const getOtherdocs = (req, res) => {
+const getOtherdocs = (req, res) => {
   connection.query("SELECT * FROM otherdocs", (err, rows) => {
     if (!err) {
       res.status(201).json(rows);
@@ -10,7 +10,7 @@ export const getOtherdocs = (req, res) => {
   });
 };
 
-export const getOtherdoc = (req, res) => {
+const getOtherdoc = (req, res) => {
   connection.query(
     `SELECT * FROM otherdocs WHERE otherDocsID=${req.params.id}`,
     (err, rows) => {
@@ -23,7 +23,7 @@ export const getOtherdoc = (req, res) => {
   );
 };
 
-export const addOtherdocs = (req, res) => {
+const addOtherdocs = (req, res) => {
   const { name, document } = req.body;
   const { guard_id } = req.params; // guard ID
   connection.query(
@@ -40,7 +40,7 @@ export const addOtherdocs = (req, res) => {
   );
 };
 
-export const deleteOtherdocs = (req, res) => {
+const deleteOtherdocs = (req, res) => {
   const { id } = req.params;
   connection.query(
     `DELETE FROM otherdocs WHERE otherDocsID=${id}`,
@@ -56,7 +56,7 @@ export const deleteOtherdocs = (req, res) => {
   );
 };
 
-export const updateOtherdocs = (req, res) => {
+const updateOtherdocs = (req, res) => {
   const { document_id, guard_id } = req.params;
   const { name, document } = req.body;
   connection.query(
@@ -71,4 +71,12 @@ export const updateOtherdocs = (req, res) => {
       }
     }
   );
+};
+
+module.exports = {
+  getOtherdocs,
+  getOtherdoc,
+  addOtherdocs,
+  deleteOtherdocs,
+  updateOtherdocs,
 };

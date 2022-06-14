@@ -1,6 +1,6 @@
-import { connection } from "../db.js";
+const { connection } = require("../db");
 
-export const getDocuments = (req, res) => {
+const getDocuments = (req, res) => {
   connection.query("SELECT * FROM document", (err, rows) => {
     if (!err) {
       res.status(201).json(rows);
@@ -10,7 +10,7 @@ export const getDocuments = (req, res) => {
   });
 };
 
-export const getDocument = (req, res) => {
+const getDocument = (req, res) => {
   connection.query(
     `SELECT * FROM document WHERE documentID=${req.params.id}`,
     (err, rows) => {
@@ -23,7 +23,7 @@ export const getDocument = (req, res) => {
   );
 };
 
-export const addDocument = (req, res) => {
+const addDocument = (req, res) => {
   const { guard_id } = req.params; // guard ID
   const { document_name, base_64 } = req.body; // document name and base 64
   connection.query(
@@ -64,7 +64,7 @@ export const addDocument = (req, res) => {
   );
 };
 
-export const deleteDocument = (req, res) => {
+const deleteDocument = (req, res) => {
   const { id } = req.params;
   connection.query(
     `DELETE FROM document WHERE documentID=${id}`,
@@ -78,33 +78,9 @@ export const deleteDocument = (req, res) => {
   );
 };
 
-// export const updateDocument = (req, res) => {
-//   const { document_id, guard_id } = req.params;
-//   const {
-//     four82,
-//     pcr,
-//     cpr,
-//     crowdcontrol,
-//     license,
-//     firearms,
-//     firstaid,
-//     medicare,
-//     others,
-//     passport,
-//     responsiblealcohol,
-//     visa,
-//     whitecard,
-//     yellowcard,
-//     workingwithchildren,
-//   } = req.body;
-//   connection.query(
-//     `UPDATE document SET four82='${four82}', PCR='${pcr}', CPR='${cpr}', CrowdControl='${crowdcontrol}', License='${license}', Firearms='${firearms}', FirstAid='${firstaid}', MediCare='${medicare}', Passport='${passport}', ResponsibleAlcohol='${responsiblealcohol}', Visa='${visa}', WhiteCard='${whitecard}', YellowCard='${yellowcard}', WorkingWithChildren='${workingwithchildren}', fk_guard=${guard_id} WHERE documentID=${document_id}`,
-//     (err, rows) => {
-//       if (!err) {
-//         res.status(201).json({ message: "Document Updated Successfully!" });
-//       } else {
-//         res.status(500).json(err);
-//       }
-//     }
-//   );
-// };
+module.exports = {
+  getDocuments,
+  getDocument,
+  addDocument,
+  deleteDocument,
+};

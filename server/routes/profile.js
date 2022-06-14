@@ -1,10 +1,12 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   guardProfile,
   companyProfile,
-} from "../controllers/profileController.js";
+} = require("../controllers/profileController");
 
-export const router = express.Router();
+const router = express.Router();
 
 router.get("/guard/:id", guardProfile);
 router.get("/company/:id", companyProfile);
+
+module.exports = router;

@@ -1,6 +1,6 @@
-import { connection } from "../db.js";
+const { connection } = require("../db");
 
-export const getCompanyAddresses = (req, res) => {
+const getCompanyAddresses = (req, res) => {
   connection.query("SELECT * FROM companyaddress", (err, rows) => {
     if (!err) {
       res.status(201).json(rows);
@@ -10,7 +10,7 @@ export const getCompanyAddresses = (req, res) => {
   });
 };
 
-export const getCompanyAddress = (req, res) => {
+const getCompanyAddress = (req, res) => {
   connection.query(
     `SELECT * FROM companyaddress WHERE companyAddressId=${req.params.id}`,
     (err, rows) => {
@@ -23,7 +23,7 @@ export const getCompanyAddress = (req, res) => {
   );
 };
 
-export const addCompanyAddress = (req, res) => {
+const addCompanyAddress = (req, res) => {
   const { company_id } = req.params; // company ID
   const { state, city, postalCode } = req.body;
   connection.query(
@@ -43,7 +43,7 @@ export const addCompanyAddress = (req, res) => {
   );
 };
 
-export const deleteCompanyAddress = (req, res) => {
+const deleteCompanyAddress = (req, res) => {
   const { id } = req.params;
   connection.query(
     `DELETE FROM companyaddress WHERE companyAddressId=${id}`,
@@ -59,7 +59,7 @@ export const deleteCompanyAddress = (req, res) => {
   );
 };
 
-export const updateCompanyAddress = (req, res) => {
+const updateCompanyAddress = (req, res) => {
   const { address_id, company_id } = req.params;
   connection.query(
     `UPDATE companyaddress SET state='${req.body.state}', city='${req.body.city}', postalCode='${req.body.postalCode}', fk_company=${company_id} WHERE companyAddressId=${address_id}`,
@@ -73,4 +73,12 @@ export const updateCompanyAddress = (req, res) => {
       }
     }
   );
+};
+
+module.exports = {
+  getCompanyAddresses,
+  getCompanyAddress,
+  addCompanyAddress,
+  deleteCompanyAddress,
+  updateCompanyAddress,
 };

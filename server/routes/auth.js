@@ -1,16 +1,18 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   addGuard,
   addCompany,
   loginAdmin,
   loginGuard,
   loginCompany,
-} from "../controllers/authController.js";
+} = require("../controllers/authController");
 
-export const router = express.Router();
+const router = express.Router();
 
 router.post("/register/guard", addGuard);
 router.post("/register/company", addCompany);
 router.post("/login/admin", loginAdmin);
 router.post("/login/guard", loginGuard);
 router.post("/login/company", loginCompany);
+
+module.exports = router;

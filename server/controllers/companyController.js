@@ -1,6 +1,6 @@
-import { connection } from "../db.js";
+const { connection } = require("../db");
 
-export const getCompanies = (req, res) => {
+const getCompanies = (req, res) => {
   connection.query("SELECT * FROM company", (err, rows) => {
     if (!err) {
       res.status(201).json(rows);
@@ -10,7 +10,7 @@ export const getCompanies = (req, res) => {
   });
 };
 
-export const getCompany = (req, res) => {
+const getCompany = (req, res) => {
   connection.query(
     `SELECT * FROM company WHERE companyID=${req.params.id}`,
     (err, rows) => {
@@ -23,7 +23,7 @@ export const getCompany = (req, res) => {
   );
 };
 
-export const deleteCompany = (req, res) => {
+const deleteCompany = (req, res) => {
   const { id } = req.params;
   connection.query(`DELETE FROM company WHERE companyID=${id}`, (err, rows) => {
     if (!err) {
@@ -34,7 +34,7 @@ export const deleteCompany = (req, res) => {
   });
 };
 
-export const updateCompany = (req, res) => {
+const updateCompany = (req, res) => {
   const { id } = req.params;
   connection.query(
     `UPDATE company SET name='${name}', phone='${phone}', email='${email}', password='${password}' WHERE companyID=${id}`,
@@ -46,4 +46,11 @@ export const updateCompany = (req, res) => {
       }
     }
   );
+};
+
+module.exports = {
+  getCompanies,
+  getCompany,
+  deleteCompany,
+  updateCompany,
 };

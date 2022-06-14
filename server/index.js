@@ -1,21 +1,7 @@
-import express from "express";
-import cors from "cors";
-import "dotenv/config";
-import { errorHandler } from "./middleware/errorMiddleware.js";
-
-// Importing Routes
-import { router as guardAddressRoute } from "./routes/guardAddress.js";
-import { router as jobAddressRoute } from "./routes/jobAddress.js";
-import { router as companyAddressRoute } from "./routes/companyAddress.js";
-import { router as bankRoute } from "./routes/bank.js";
-import { router as companyRoute } from "./routes/company.js";
-import { router as documentsRoute } from "./routes/documents.js";
-import { router as guardRoute } from "./routes/guard.js";
-import { router as jobsRoute } from "./routes/jobs.js";
-import { router as shiftRoute } from "./routes/shift.js";
-import { router as authRoute } from "./routes/auth.js";
-import { router as profileRoute } from "./routes/profile.js";
-import { router as otherDocsRouter } from "./routes/otherDocs.js";
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv").config();
+const { errorHandler } = require("./middleware/errorMiddleware");
 
 // Initializing Express App
 const app = express();
@@ -27,21 +13,22 @@ app.use(cors());
 app.use(errorHandler);
 
 // Routes
+app.use("/guardAddress", require("./routes/guardAddress"));
+app.use("/jobAddress", require("./routes/jobAddress"));
+app.use("/companyAddress", require("./routes/companyAddress"));
+app.use("/banks", require("./routes/bank"));
+app.use("/companies", require("./routes/company"));
+app.use("/documents", require("./routes/documents"));
+app.use("/guards", require("./routes/guard"));
+app.use("/jobs", require("./routes/jobs"));
+app.use("/shifts", require("./routes/shift"));
+app.use("/auth", require("./routes/auth"));
+app.use("/profile", require("./routes/profile"));
+app.use("/otherDocs", require("./routes/otherDocs"));
+
 // app.use("/", (req, res) => {
 //   res.status(200).json({ message: "Base URL Working!" });
 // });
-app.use("/guardAddress", guardAddressRoute);
-app.use("/jobAddress", jobAddressRoute);
-app.use("/companyAddress", companyAddressRoute);
-app.use("/banks", bankRoute);
-app.use("/companies", companyRoute);
-app.use("/documents", documentsRoute);
-app.use("/guards", guardRoute);
-app.use("/jobs", jobsRoute);
-app.use("/shifts", shiftRoute);
-app.use("/auth", authRoute);
-app.use("/profile", profileRoute);
-app.use("/otherDocs", otherDocsRouter);
 
 // Starting the App
 const PORT = process.env.PORT || 5000;

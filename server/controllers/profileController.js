@@ -1,9 +1,9 @@
-import jwt from "jsonwebtoken";
-import { connection } from "../db.js";
+const jwt = require("jsonwebtoken");
+const { connection } = require("../db");
 
 const SECRET = "guard-recruiting-app" || process.env.SECRET;
 
-export const guardProfile = (req, res) => {
+const guardProfile = (req, res) => {
   try {
     const { id } = req.params; // guard ID
     let isAdmin = 0;
@@ -99,7 +99,7 @@ export const guardProfile = (req, res) => {
   }
 };
 
-export const companyProfile = (req, res) => {
+const companyProfile = (req, res) => {
   try {
     const { id } = req.params; // company ID
     let isAdmin = 0;
@@ -158,4 +158,9 @@ export const companyProfile = (req, res) => {
     res.status(500);
     throw new Error(error);
   }
+};
+
+module.exports = {
+  guardProfile,
+  companyProfile,
 };

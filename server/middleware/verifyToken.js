@@ -1,8 +1,8 @@
-import jwt from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
 
 const SECRET = "guard-recruiting-app" || process.env.SECRET;
 
-export const verifyToken = (req, res, next) => {
+const verifyToken = (req, res, next) => {
   const authHeader = req.headers.token;
   if (authHeader) {
     const token = authHeader.split(" ")[1];
@@ -16,7 +16,7 @@ export const verifyToken = (req, res, next) => {
   }
 };
 
-export const verifyTokenAndAdmin = (req, res, next) => {
+const verifyTokenAndAdmin = (req, res, next) => {
   verifyToken(req, res, () => {
     if (req.user.isAdmin === 1) {
       next();
@@ -26,7 +26,7 @@ export const verifyTokenAndAdmin = (req, res, next) => {
   });
 };
 
-export const verifyTokenAndCompany = (req, res, next) => {
+const verifyTokenAndCompany = (req, res, next) => {
   verifyToken(req, res, () => {
     if (req.user.isCompany === 1) {
       next();
@@ -36,7 +36,7 @@ export const verifyTokenAndCompany = (req, res, next) => {
   });
 };
 
-export const verifyTokenAndGuard = (req, res, next) => {
+const verifyTokenAndGuard = (req, res, next) => {
   verifyToken(req, res, () => {
     if (req.user.isGuard === 1) {
       next();
@@ -44,4 +44,11 @@ export const verifyTokenAndGuard = (req, res, next) => {
       res.status(403).json("User not Authorized!");
     }
   });
+};
+
+module.exports = {
+  verifyToken,
+  verifyTokenAndAdmin,
+  verifyTokenAndCompany,
+  verifyTokenAndGuard,
 };

@@ -1,9 +1,9 @@
-import jwt from "jsonwebtoken";
-import { connection } from "../db.js";
+const jwt = require("jsonwebtoken");
+const { connection } = require("../db");
 
 const SECRET = "guard-recruiting-app" || process.env.SECRET;
 
-export const addGuard = (req, res) => {
+const addGuard = (req, res) => {
   try {
     connection.query(
       `INSERT INTO guard (firstName, middleName, lastName, email, password, phone, dob, gender, emergencyContact) VALUES ('${req.body.firstName}', '${req.body.middleName}', '${req.body.lastName}', '${req.body.email}', '${req.body.password}', '${req.body.phone}', '${req.body.dob}', '${req.body.gender}', '${req.body.emergencyContact}')`,
@@ -15,13 +15,13 @@ export const addGuard = (req, res) => {
               guard: {
                 guardID: rows.insertId,
                 firstName: req.body.firstName,
-              	middleName: req.body.middleName,
-              	lastName: req.body.lastName,
-              	email: req.body.email,
-              	phone: req.body.phone,
-              	dob: req.body.dob,
-              	gender: req.body.gender,
-              	emergencyContact: req.body.emergencyContact,
+                middleName: req.body.middleName,
+                lastName: req.body.lastName,
+                email: req.body.email,
+                phone: req.body.phone,
+                dob: req.body.dob,
+                gender: req.body.gender,
+                emergencyContact: req.body.emergencyContact,
               },
               address: {},
               documents: {},
@@ -39,7 +39,7 @@ export const addGuard = (req, res) => {
   }
 };
 
-export const addCompany = (req, res) => {
+const addCompany = (req, res) => {
   const { name, phone, email, password } = req.body;
   connection.query(
     `INSERT INTO company (name, phone, email, password) VALUES ('${name}', '${phone}', '${email}', '${password}')`,
@@ -55,7 +55,7 @@ export const addCompany = (req, res) => {
   );
 };
 
-export const loginAdmin = (req, res) => {
+const loginAdmin = (req, res) => {
   try {
     const { email, password, isAdmin } = req.body;
     if (isAdmin === 1) {
@@ -101,7 +101,7 @@ export const loginAdmin = (req, res) => {
   }
 };
 
-export const loginGuard = (req, res) => {
+const loginGuard = (req, res) => {
   try {
     const { email, password, isAdmin } = req.body;
     if (isAdmin === 0) {
@@ -200,7 +200,7 @@ export const loginGuard = (req, res) => {
   }
 };
 
-export const loginCompany = (req, res) => {
+const loginCompany = (req, res) => {
   try {
     const { email, password, isAdmin } = req.body;
     if (isAdmin === 0) {
@@ -244,4 +244,12 @@ export const loginCompany = (req, res) => {
     res.status(500);
     throw new Error(error);
   }
+};
+
+module.exports = {
+  addGuard,
+  addCompany,
+  loginAdmin,
+  loginGuard,
+  loginCompany,
 };

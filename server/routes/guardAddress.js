@@ -1,17 +1,17 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getGuardAddresses,
   addGuardAddress,
   deleteGuardAddress,
   getGuardAddress,
   updateGuardAddress,
-} from "../controllers/guardAddressController.js";
-import {
+} = require("../controllers/guardAddressController");
+const {
   verifyTokenAndAdmin,
   verifyTokenAndGuard,
-} from "../middleware/verifyToken.js";
+} = require("../middleware/verifyToken");
 
-export const router = express.Router();
+const router = express.Router();
 
 router.route("/").get(getGuardAddresses);
 router
@@ -22,3 +22,5 @@ router.route("/:guard_id").post(addGuardAddress);
 router
   .route("/:address_id/:guard_id")
   .patch(verifyTokenAndGuard, updateGuardAddress);
+
+module.exports = router;

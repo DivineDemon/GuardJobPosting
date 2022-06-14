@@ -1,6 +1,6 @@
-import { connection } from "../db.js";
+const { connection } = require("../db");
 
-export const getShifts = (req, res) => {
+const getShifts = (req, res) => {
   connection.query("SELECT * FROM shift", (err, rows) => {
     if (!err) {
       res.status(201).json(rows);
@@ -10,7 +10,7 @@ export const getShifts = (req, res) => {
   });
 };
 
-export const getShift = (req, res) => {
+const getShift = (req, res) => {
   connection.query(
     `SELECT * FROM shift WHERE shiftID=${req.params.id}`,
     (err, rows) => {
@@ -23,7 +23,7 @@ export const getShift = (req, res) => {
   );
 };
 
-export const addShift = (req, res) => {
+const addShift = (req, res) => {
   const { startTime, endTime, date } = req.body;
   const { job_id, guard_id } = req.params;
   connection.query(
@@ -40,7 +40,7 @@ export const addShift = (req, res) => {
   );
 };
 
-export const deleteShift = (req, res) => {
+const deleteShift = (req, res) => {
   const { id } = req.params;
   connection.query(`DELETE FROM shift WHERE shiftID=${id}`, (err, rows) => {
     if (!err) {
@@ -51,7 +51,7 @@ export const deleteShift = (req, res) => {
   });
 };
 
-export const updateShift = (req, res) => {
+const updateShift = (req, res) => {
   const { shift_id, job_id, guard_id } = req.params;
   const { startTime, endTime, date } = req.body;
   connection.query(
@@ -64,4 +64,12 @@ export const updateShift = (req, res) => {
       }
     }
   );
+};
+
+module.exports = {
+  getShifts,
+  getShift,
+  addShift,
+  deleteShift,
+  updateShift,
 };

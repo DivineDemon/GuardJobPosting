@@ -1,4 +1,4 @@
-import mysql from "mysql";
+const mysql = require("mysql");
 
 const db_config = {
   host: "us-cdbr-east-05.cleardb.net",
@@ -14,4 +14,6 @@ pool.on("acquire", function (connection) {
   console.log("Connection %d acquired", connection.threadId);
 });
 
-export const connection = pool;
+module.exports = {
+  connection: pool,
+};

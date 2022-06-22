@@ -1,5 +1,13 @@
 const { connection } = require("../db");
 
+// const createJob = (req, res) => {
+//   const { company_id, address_id } = req.params;
+//   const { jobName, description, payrate, documentList, shifts, lat, lng } =
+//     req.body;
+
+//   connection.query(``)
+// };
+
 const getJobs = (req, res) => {
   const { id } = req.params; // job ID
   connection.query(

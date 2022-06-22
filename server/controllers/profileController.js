@@ -4,12 +4,21 @@ const { connection } = require("../db");
 const SECRET = "guard-recruiting-app" || process.env.SECRET;
 
 const guardProfile = (req, res) => {
+  const guardProfile = {};
+  const { id } = req.params; // guard ID
   try {
-    const { id } = req.params; // guard ID
     let isAdmin = 0;
     if (isAdmin === 0) {
       connection.query(
-        `SELECT guard.guardID, guard.firstName, guard.middleName, guard.lastName, guard.email, guard.password, guard.phone, guard.dob, guard.gender, guard.emergencyContact, guard.isAdmin, guard.isGuard, guard.isCompany, guardaddress.guardAddressId, guardaddress.state, guardaddress.city, guardaddress.postalCode, document.documentID, document.four82, document.PCR, document.CPR, document.CrowdControl, document.License, document.Firearms, document.FirstAid, document.FirstAid, document.MediCare, document.Passport, document.ResponsibleAlcohol, document.Visa, document.WhiteCard, document.YellowCard, document.WorkingWithChildren, otherdocs.otherDocsId, otherdocs.otherDocName, otherdocs.document, bank.bankID, bank.bankName, bank.accountTitle, bank.accountNo, bank.bsb, bank.abn, shift.shiftID, shift.startTime, shift.endTime, shift.date FROM guard INNER JOIN guardaddress ON guard.guardID = guardaddress.fk_guard INNER JOIN document ON document.fk_guard = guard.guardID INNER JOIN bank ON bank.guard_id = guard.guardID INNER JOIN otherdocs ON otherdocs.fk_guard = guard.guardID INNER JOIN shift ON shift.fk_guard = guard.guardID WHERE guard.guardID=${id}`,
+        `SELECT 'guard' AS tablename, guard.* FROM guard WHERE guardID=${id}
+        UNION
+        SELECT 'guardaddress' AS tablename, guardaddress.*, Null as col6, Null as col7, Null as col8, Null as col9, Null as col10, Null as col11, Null as col12, Null as col13, Null as col14, Null as col15, Null as col16 FROM guardaddress WHERE fk_guard=${id}
+        UNION
+        SELECT 'document' as tablename, document.* FROM document WHERE fk_guard=${id}
+        UNION
+        SELECT 'otherdocs' AS tablename, otherdocs.*, Null as col5, Null as col6, Null as col7, Null as col8, Null as col9, Null as col10, Null as col11, Null as col12, Null as col13, Null as col14, Null as col15, Null as col16 FROM otherdocs WHERE fk_guard=${id}
+        UNION
+        SELECT 'bank' AS tablename, bank.*, Null as col8, Null as col9, Null as col10, Null as col11, Null as col12, Null as col13, Null as col14, Null as col15, Null as col16 FROM bank WHERE guard_id=${id}`,
         function (err, rows) {
           if (!err) {
             const guardToken = jwt.sign(
@@ -24,64 +33,80 @@ const guardProfile = (req, res) => {
                 expiresIn: "3d",
               }
             );
-            const schedule = [];
-            rows.forEach((row, i) => {
-              const shift = {
-                shiftStartTime: rows[i].startTime,
-                shiftEndTime: rows[i].endTime,
-                shiftDate: rows[i].date,
-              };
-              schedule.push(shift);
+
+            let guard = null,
+              address = null,
+              documents = null,
+              otherdocs = null,
+              bank = null;
+            rows.forEach((row) => {
+              switch (row.tablename) {
+                case "guard":
+                  guard = {
+                    guardID: row.guardID,
+                    firstName: row.firstName,
+                    middleName: row.middleName,
+                    lastName: row.lastName,
+                    email: row.email,
+                    password: row.password,
+                    phone: row.phone,
+                    dob: row.dob,
+                    gender: row.gender,
+                    emergencyContact: row.emergencyContact,
+                  };
+                  break;
+                case "guardaddress":
+                  address = {
+                    state: rows[1].firstName,
+                    city: rows[1].middleName,
+                    postalCode: rows[1].lastName,
+                  };
+                  break;
+                case "document":
+                  documents = {
+                    four82: rows[2].firstName,
+                    PCR: rows[2].middleName,
+                    CPR: rows[2].lastName,
+                    CrowdControl: rows[2].email,
+                    License: rows[2].password,
+                    Firearms: rows[2].phone,
+                    FirstAid: rows[2].dob,
+                    MediCare: rows[2].gender,
+                    Passport: rows[2].status,
+                    ResponsibleAlcohol: rows[2].isAdmin,
+                    Visa: rows[2].admin_id,
+                    WhiteCard: rows[2].address_id,
+                    YellowCard: rows[2].isGuard,
+                    WorkingWithChildren: rows[2].isCompany,
+                  };
+                  break;
+                case "otherdocs":
+                  otherdocs = {
+                    name: rows[3].firstName,
+                    document: rows[3].middleName,
+                  };
+                  break;
+                case "bank":
+                  bank = {
+                    bankName: rows[4].firstName,
+                    accountTitle: rows[4].middleName,
+                    accountNo: rows[4].lastName,
+                    bsb: rows[4].email,
+                    abn: rows[4].password,
+                  };
+                  break;
+              }
             });
+
             res.status(201).json({
-              success: true,
-              message: "Guard Logged In!",
+              status: true,
+              message: "Got Guard Profile!",
               guardProfile: {
-                guard: {
-                  guardID: rows[0].guardID,
-                  firstName: rows[0].firstName,
-                  middleName: rows[0].middleName,
-                  lastName: rows[0].lastName,
-                  email: rows[0].email,
-                  password: rows[0].password,
-                  phone: rows[0].phone,
-                  dob: rows[0].dob,
-                  gender: rows[0].gender,
-                  emergencyContact: rows[0].emergencyContact,
-                },
-                address: {
-                  state: rows[0].state,
-                  city: rows[0].city,
-                  postalCode: rows[0].postalCode,
-                },
-                documents: {
-                  four82: rows[0].four82,
-                  PCR: rows[0].PCR,
-                  CPR: rows[0].CPR,
-                  CrowdControl: rows[0].CrowdControl,
-                  License: rows[0].License,
-                  Firearms: rows[0].Firearms,
-                  FirstAid: rows[0].FirstAid,
-                  MediCare: rows[0].MediCare,
-                  Passport: rows[0].Passport,
-                  ResponsibleAlcohol: rows[0].ResponsibleAlcohol,
-                  Visa: rows[0].Visa,
-                  WhiteCard: rows[0].WhiteCard,
-                  YellowCard: rows[0].YellowCard,
-                  WorkingWithChildren: rows[0].WorkingWithChildren,
-                },
-                otherDocs: {
-                  name: rows[0].name,
-                  document: rows[0].document,
-                },
-                bank: {
-                  bankName: rows[0].bankName,
-                  accountTitle: rows[0].accountTitle,
-                  accountNo: rows[0].accountNo,
-                  bsb: rows[0].bsb,
-                  abn: rows[0].abn,
-                },
-                schedule,
+                guard,
+                address,
+                documents,
+                otherDocs,
+                bank,
               },
               guardToken,
             });

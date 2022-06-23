@@ -4,7 +4,6 @@ const { connection } = require("../db");
 const SECRET = "guard-recruiting-app" || process.env.SECRET;
 
 const guardProfile = (req, res) => {
-  const guardProfile = {};
   const { id } = req.params; // guard ID
   try {
     let isAdmin = 0;
@@ -30,7 +29,7 @@ const guardProfile = (req, res) => {
               },
               SECRET,
               {
-                expiresIn: "3d",
+                expiresIn: "7d",
               }
             );
 
@@ -53,6 +52,7 @@ const guardProfile = (req, res) => {
                     dob: row.dob,
                     gender: row.gender,
                     emergencyContact: row.emergencyContact,
+                    status: row.status,
                   };
                   break;
                 case "guardaddress":
@@ -72,12 +72,12 @@ const guardProfile = (req, res) => {
                     Firearms: rows[2].phone,
                     FirstAid: rows[2].dob,
                     MediCare: rows[2].gender,
-                    Passport: rows[2].status,
-                    ResponsibleAlcohol: rows[2].isAdmin,
-                    Visa: rows[2].admin_id,
-                    WhiteCard: rows[2].address_id,
-                    YellowCard: rows[2].isGuard,
-                    WorkingWithChildren: rows[2].isCompany,
+                    Passport: rows[2].emergencyContact,
+                    ResponsibleAlcohol: rows[2].status,
+                    Visa: rows[2].isAdmin,
+                    WhiteCard: rows[2].admin_id,
+                    YellowCard: rows[2].address_id,
+                    WorkingWithChildren: rows[2].isGuard,
                   };
                   break;
                 case "otherdocs":
@@ -105,15 +105,14 @@ const guardProfile = (req, res) => {
                 guard,
                 address,
                 documents,
-                otherDocs,
+                otherdocs,
                 bank,
               },
               guardToken,
             });
           } else {
-            res
-              .status(404)
-              .json({ success: false, message: "Guard Not Found!" });
+            res.status(404);
+            throw new Error("Guard Not Found!");
           }
         }
       );
@@ -130,7 +129,9 @@ const companyProfile = (req, res) => {
     let isAdmin = 0;
     if (isAdmin === 0) {
       connection.query(
-        `SELECT company.companyID, company.companyName, company.phone, company.email, company.isAdmin, company.isCompany, company.isGuard, companyaddress.state, companyaddress.city, companyaddress.postalCode, paymentcard.cardNumber, paymentcard.expDate, paymentcard.cvv FROM company INNER JOIN companyaddress ON companyaddress.fk_company = company.companyID INNER JOIN paymentcard ON paymentcard.fk_company = company.companyID WHERE company.companyID = ${id}`,
+        `SELECT 'company' AS tablename, company.* FROM company WHERE companyID=${id}
+        UNION
+        SELECT 'companyaddress' AS tablename, companyaddress.*, Null AS col6, Null AS col7, Null AS col8 FROM companyaddress WHERE fk_company=${id}`,
         function (err, rows) {
           if (!err) {
             const companyToken = jwt.sign(
@@ -142,39 +143,46 @@ const companyProfile = (req, res) => {
               },
               SECRET,
               {
-                expiresIn: "3d",
+                expiresIn: "7d",
               }
             );
-            const paymentCards = [];
-            rows.forEach((row, i) => {
-              const card = {
-                cardNumber: rows[i].cardNumber,
-                expDate: rows[i].expDate,
-                cvv: rows[i].cvv,
-              };
-              paymentCards.push(card);
+
+            let company = null,
+              address = null;
+
+            rows.forEach((row) => {
+              switch (row.tablename) {
+                case "company":
+                  company = {
+                    companyID: row.companyID,
+                    companyName: row.companyName,
+                    phone: row.phone,
+                    email: row.email,
+                    password: row.password,
+                  };
+                  break;
+                case "companyaddress":
+                  address = {
+                    state: rows[1].companyName,
+                    city: rows[1].phone,
+                    postalCode: rows[1].email,
+                  };
+                  break;
+              }
             });
+
             res.status(201).json({
-              success: true,
-              message: "Company Logged In!",
+              status: true,
+              message: "Got Company Profile!",
               companyProfile: {
-                company: {
-                  companyID: rows[0].companyID,
-                  companyName: rows[0].companyName,
-                  phone: rows[0].phone,
-                  email: rows[0].email,
-                  state: rows[0].state,
-                  city: rows[0].city,
-                  postalCode: rows[0].postalCode,
-                },
-                paymentCards,
+                company,
+                address,
               },
               companyToken,
             });
           } else {
-            res
-              .status(404)
-              .json({ success: false, message: "Company Not Found!" });
+            res.status(404);
+            throw new Error("Company Not Found!");
           }
         }
       );

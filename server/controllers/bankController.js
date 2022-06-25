@@ -54,14 +54,40 @@ const addBank = (req, res) => {
   const { name, accountTitle, accountNo, bsb, abn } = req.body;
   const { guard_id } = req.params; // guard ID
   connection.query(
-    `INSERT INTO bank (bankName, accountTitle, accountNo, bsb, abn, guard_id) VALUES ('${name}', '${accountTitle}', ${accountNo}, ${bsb}, ${abn}, ${guard_id})`,
-    (err, rows, fields) => {
-      if (!err) {
-        res
-          .status(201)
-          .json({ message: "Data Inserted Successfully!", data: rows });
+    `SELECT * FROM bank WHERE guard_id=${guard_id}`,
+    (err, rows) => {
+      if (rows.length > 0) {
+        connection.query(
+          `UPDATE bank SET bankName='${name}', accountTitle='${accountTitle}', accountNo=${accountNo}, bsb=${bsb}, abn=${abn}, WHERE guard_id=${guard_id}`,
+          (err, rows) => {
+            if (!err) {
+              res.status(200).json({
+                success: true,
+                message: "Bank Details Updated Successfully!",
+                data: rows,
+              });
+            } else {
+              res.status(500);
+              throw new Error(err);
+            }
+          }
+        );
       } else {
-        res.status(500).json(err);
+        connection.query(
+          `INSERT INTO bank (bankName, accountTitle, accountNo, bsb, abn, guard_id) VALUES ('${name}', '${accountTitle}', ${accountNo}, ${bsb}, ${abn}, ${guard_id})`,
+          (err, rows) => {
+            if (!err) {
+              res.status(200).json({
+                success: true,
+                message: "Successfully Added Bank Details!",
+                data: rows,
+              });
+            } else {
+              res.status(500);
+              throw new Error(err);
+            }
+          }
+        );
       }
     }
   );

@@ -104,25 +104,9 @@ const deleteBank = (req, res) => {
   });
 };
 
-const updateBank = (req, res) => {
-  const { bank_id, guard_id } = req.params;
-  const { name, accountTitle, accountNo, bsb, abn } = req.body;
-  connection.query(
-    `UPDATE bank SET bankName='${name}', accountTitle='${accountTitle}', accountNo=${accountNo}, bsb=${bsb}, abn=${abn}, guard_id=${guard_id} WHERE bankID=${bank_id}`,
-    (err, rows) => {
-      if (!err) {
-        res.status(201).json({ message: "Bank Updated Successfully!" });
-      } else {
-        res.status(500).json(err);
-      }
-    }
-  );
-};
-
 module.exports = {
   getBanks,
   getBank,
   addBank,
   deleteBank,
-  updateBank,
 };

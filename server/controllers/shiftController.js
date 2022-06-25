@@ -1,23 +1,42 @@
 const { connection } = require("../db");
 
-const getShifts = (req, res) => {
-  connection.query("SELECT * FROM shift", (err, rows) => {
+const getShift = (req, res) => {
+  const { id } = req.params; // shift ID
+  connection.query(`SELECT * FROM shift WHERE shiftID=${id}`, (err, rows) => {
     if (!err) {
       res.status(201).json(rows);
     } else {
-      res.status(500).json(err);
+      res.status(500);
+      throw new Error(err);
     }
   });
 };
 
-const getShift = (req, res) => {
+const getGuardShifts = (req, res) => {
+  const { guard_id } = req.params;
   connection.query(
-    `SELECT * FROM shift WHERE shiftID=${req.params.id}`,
+    `SELECT * FROM shift WHERE fk_guard=${guard_id}`,
     (err, rows) => {
       if (!err) {
         res.status(201).json(rows);
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
+      }
+    }
+  );
+};
+
+const getJobShifts = (req, res) => {
+  const { job_id } = req.params;
+  connection.query(
+    `SELECT * FROM shift WHERE fk_job=${job_id}`,
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json(rows);
+      } else {
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -34,7 +53,8 @@ const addShift = (req, res) => {
           .status(201)
           .json({ message: "Data Inserted Successfully!", data: rows });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -46,7 +66,8 @@ const deleteShift = (req, res) => {
     if (!err) {
       res.status(201).json({ message: "Shift Deleted Successfully!" });
     } else {
-      res.status(500).json(err);
+      res.status(500);
+      throw new Error(err);
     }
   });
 };
@@ -60,7 +81,8 @@ const updateShift = (req, res) => {
       if (!err) {
         res.status(201).json({ message: "Shift Updated Successfully!" });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );

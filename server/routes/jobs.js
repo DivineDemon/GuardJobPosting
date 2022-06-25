@@ -7,10 +7,13 @@ const {
   updateJob,
   getCompanyJobs,
 } = require("../controllers/jobsController");
-const { verifyTokenAndCompany } = require("../middleware/verifyToken");
+const {
+  verifyTokenAndGuard,
+  verifyTokenAndCompany,
+} = require("../middleware/verifyToken");
 const router = express.Router();
 
-router.route("/").get(getJobs);
+router.route("/").get(verifyTokenAndGuard, getJobs);
 router.route("/:id").delete(verifyTokenAndCompany, deleteJob).get(getJob);
 router.route("/:company_id/:address_id").post(verifyTokenAndCompany, addJob);
 router

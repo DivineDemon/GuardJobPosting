@@ -25,6 +25,7 @@ app.use("/shifts", require("./routes/shift"));
 app.use("/auth", require("./routes/auth"));
 app.use("/profile", require("./routes/profile"));
 app.use("/otherDocs", require("./routes/otherDocs"));
+app.use("/cards", require("./routes/card"));
 
 // app.use("/", (req, res) => {
 //   res.status(200).json({ message: "Base URL Working!" });

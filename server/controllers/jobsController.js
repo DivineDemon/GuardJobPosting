@@ -1,75 +1,76 @@
 const { connection } = require("../db");
-
-// const createJob = (req, res) => {
-//   const { company_id, address_id } = req.params;
-//   const { jobName, description, payrate, documentList, shifts, lat, lng } =
-//     req.body;
-
-//   connection.query(``)
-// };
+const stripe = require("stripe")(process.env.STRIPE_KEY);
+const rowsPerPage = process.env.ROWS || 25;
 
 const getJobs = (req, res) => {
-  const { id } = req.params; // job ID
-  connection.query(
-    `SELECT jobs.jobsID, jobs.jobName, jobs.lat, jobs.lng, jobs.description, jobs.payrate, jobs.documentList, shift.shiftID, shift.startTime, shift.endTime, shift.date, shift.isBooked FROM jobs INNER JOIN shift WHERE shift.fk_job = jobs.jobsID`,
-    (err, rows) => {
-      if (!err) {
-        const jobs = [];
-        const shifts = [];
-        rows.forEach((row, i) => {
-          const job = {
-            jobID: rows[i].jobsID,
-            name: rows[i].jobName,
-            lat: rows[i].lat,
-            lng: rows[i].lng,
-            description: rows[i].description,
-            payrate: rows[i].payrate,
-            documentList: rows[i].documentList,
-          };
-          jobs.push(job);
-
-          const shift = {
-            shiftID: rows[i].shiftID,
-            shiftStartTime: rows[i].startTime,
-            shiftEndTime: rows[i].endTime,
-            shiftDate: rows[i].date,
-            isBooked: rows[i].isBooked,
-          };
-          shifts.push(shift);
-        });
-        res.status(201).json({
-          status: true,
-          message: "Succesfully Retrieved Jobs Data!",
-          schedule: {
-            jobs,
-            shifts,
-          },
-        });
-      } else {
-        res.status(500).json(err);
-      }
+  connection.query("SELECT * FROM jobs", (err, rows) => {
+    if (err) {
+      res.status(500);
+      throw new Error(err);
     }
-  );
+
+    const numOfRows = rows.length;
+    const numOfPages = Math.ceil(numOfRows / rowsPerPage);
+    let page = req.query.page ? Number(req.query.page) : 1;
+    if (page > numOfPages) {
+      res.send("/?page=" + encodeURIComponent(numOfPages));
+    } else if (page < 1) {
+      res.send("/?page=" + encodeURIComponent("1"));
+    }
+
+    const startingLimit = (page - 1) * rowsPerPage;
+    connection.query(
+      `SELECT * FROM jobs LIMIT ${startingLimit}, ${rowsPerPage}`,
+      (err, rows) => {
+        if (err) {
+          res.status(500);
+          throw new Error(err);
+        }
+
+        let iterator = page - 5 < 1 ? 1 : page - 5;
+        let endingLink =
+          iterator + 9 <= numOfPages ? iterator + 9 : page + numOfPages;
+        if (endingLink < page + 4) {
+          iterator -= page + 4 - numOfPages;
+        }
+
+        res.send(rows);
+      }
+    );
+  });
 };
 
 const getJob = (req, res) => {
   const { id } = req.params; // job ID
+  connection.query(`SELECT * FROM jobs WHERE jobsID = ${id}`, (err, rows) => {
+    if (!err) {
+      res.status(200).json({
+        status: true,
+        message: "Succesfully Retrieved Jobs Data!",
+        job: {
+          ID: rows[0].jobsID,
+          name: rows[0].jobName,
+          lat: rows[0].lat,
+          lng: rows[0].lng,
+          description: rows[0].description,
+          payrate: rows[0].payrate,
+          documentList: rows[0].documentList,
+        },
+      });
+    } else {
+      res.status(500);
+      throw new Error(err);
+    }
+  });
+};
+
+const getCompanyJobs = (req, res) => {
+  const { company_id } = req.params; // job ID
   connection.query(
-    `SELECT jobs.jobsID, jobs.jobName, jobs.lat, jobs.lng, jobs.description, jobs.payrate, jobs.documentList, shift.shiftID, shift.startTime, shift.endTime, shift.date, shift.isBooked FROM jobs INNER JOIN shift ON jobs.jobsID = ${id}`,
+    `SELECT * FROM jobs WHERE company_fk = ${company_id}`,
     (err, rows) => {
       if (!err) {
-        const shifts = [];
-        rows.forEach((row, i) => {
-          const shift = {
-            shiftID: rows[i].shiftID,
-            shiftStartTime: rows[i].startTime,
-            shiftEndTime: rows[i].endTime,
-            shiftDate: rows[i].date,
-            isBooked: rows[i].isBooked,
-          };
-          shifts.push(shift);
-        });
-        res.status(201).json({
+        res.status(200).json({
           status: true,
           message: "Succesfully Retrieved Jobs Data!",
           job: {
@@ -81,10 +82,10 @@ const getJob = (req, res) => {
             payrate: rows[0].payrate,
             documentList: rows[0].documentList,
           },
-          shifts,
         });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -92,15 +93,31 @@ const getJob = (req, res) => {
 
 const addJob = (req, res) => {
   const { company_id, address_id } = req.params;
-  const { name, location, description, payrate, documentList, shifts } =
+  const { name, location, description, payrate, documentList, lat, lng } =
     req.body;
   connection.query(
-    `INSERT INTO jobs (jobName, location, description, payrate, documentList, shifts, company_fk, addressfk) VALUES ('${name}', '${location}', '${description}', ${payrate}, '${documentList}', '${shifts}', ${company_id}, ${address_id})`,
+    `INSERT INTO jobs (jobName, description, payrate, documentList, company_fk, addressfk, lat, lng) VALUES ('${name}', '${description}', ${payrate}, '${documentList}', ${company_id}, ${address_id}, ${lat}, ${lng})`,
     (err, rows, fields) => {
       if (!err) {
-        res
-          .status(201)
-          .json({ message: "Data Inserted Successfully!", data: rows });
+        stripe.charges.create(
+          {
+            source: req.body.tokenId,
+            amount: 2,
+            currency: "aud",
+          },
+          (stripeErr, stripeRes) => {
+            if (stripeErr) {
+              res.status(500);
+              throw new Error(stripeErr);
+            } else {
+              res.status(200).json(stripeRes);
+            }
+          }
+        );
+        res.status(201).json({
+          message: "Data Inserted Successfully!",
+          id: rows.insertId,
+        });
       } else {
         res.status(500).json(err);
       }
@@ -121,10 +138,9 @@ const deleteJob = (req, res) => {
 
 const updateJob = (req, res) => {
   const { job_id, company_id, address_id } = req.params;
-  const { name, location, description, payrate, documentList, shifts } =
-    req.body;
+  const { name, location, description, payrate, documentList } = req.body;
   connection.query(
-    `UPDATE jobs SET name='${name}', location='${location}', description='${description}', payrate=${payrate}, documentList='${documentList}', shifts='${shifts}', companyfk=${company_id}, addressfk=${address_id} WHERE jobsID=${job_id}`,
+    `UPDATE jobs SET name='${name}', location='${location}', description='${description}', payrate=${payrate}, documentList='${documentList}', companyfk=${company_id}, addressfk=${address_id} WHERE jobsID=${job_id}`,
     (err, rows) => {
       if (!err) {
         res.status(201).json({ message: "Job Updated Successfully!" });

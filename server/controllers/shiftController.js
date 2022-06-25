@@ -89,7 +89,8 @@ const updateShift = (req, res) => {
 };
 
 module.exports = {
-  getShifts,
+  getGuardShifts,
+  getJobShifts,
   getShift,
   addShift,
   deleteShift,

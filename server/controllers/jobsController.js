@@ -157,4 +157,5 @@ module.exports = {
   addJob,
   deleteJob,
   updateJob,
+  getCompanyJobs,
 };

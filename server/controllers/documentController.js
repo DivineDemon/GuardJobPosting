@@ -41,24 +41,8 @@ const addDocument = (req, res) => {
                 (err, rows) => {
                   if (!err) {
                     res.status(201).json({
+                      success: true,
                       message: "Data Updated Successfully!",
-                      data: {
-                        four82: rows[0].four82 || null,
-                        CPR: rows[0].CPR || null,
-                        CrowdControl: rows[0].CrowdControl || null,
-                        Firearms: rows[0].Firearms || null,
-                        FirstAid: rows[0].FirstAid || null,
-                        License: rows[0].License || null,
-                        MediCare: rows[0].MediCare || null,
-                        Passport: rows[0].Passport || null,
-                        PCR: rows[0].PCR || null,
-                        ResponsibleAlcohol: rows[0].ResponsibleAlcohol || null,
-                        Visa: rows[0].Visa || null,
-                        WhiteCard: rows[0].WhiteCard || null,
-                        WorkingWithChildren:
-                          rows[0].WorkingWithChildren || null,
-                        YellowCard: rows[0].YellowCard || null,
-                      },
                       id: rows.insertId,
                     });
                   }
@@ -80,24 +64,8 @@ const addDocument = (req, res) => {
                 (err, rows) => {
                   if (!err) {
                     res.status(201).json({
+                      success: true,
                       message: "Data Inserted Successfully!",
-                      data: {
-                        four82: rows[0].four82 || null,
-                        CPR: rows[0].CPR || null,
-                        CrowdControl: rows[0].CrowdControl || null,
-                        Firearms: rows[0].Firearms || null,
-                        FirstAid: rows[0].FirstAid || null,
-                        License: rows[0].License || null,
-                        MediCare: rows[0].MediCare || null,
-                        Passport: rows[0].Passport || null,
-                        PCR: rows[0].PCR || null,
-                        ResponsibleAlcohol: rows[0].ResponsibleAlcohol || null,
-                        Visa: rows[0].Visa || null,
-                        WhiteCard: rows[0].WhiteCard || null,
-                        WorkingWithChildren:
-                          rows[0].WorkingWithChildren || null,
-                        YellowCard: rows[0].YellowCard || null,
-                      },
                       id: rows.insertId,
                     });
                   }
@@ -120,7 +88,9 @@ const deleteDocument = (req, res) => {
     `DELETE FROM document WHERE documentID=${id}`,
     (err, rows) => {
       if (!err) {
-        res.status(201).json({ message: "Document Deleted Successfully!" });
+        res
+          .status(201)
+          .json({ success: true, message: "Document Deleted Successfully!" });
       } else {
         res.status(500);
         throw new Error(err);

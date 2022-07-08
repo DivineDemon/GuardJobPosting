@@ -23,4 +23,4 @@ router
   .route("/:address_id/:job_id")
   .patch(verifyTokenAndCompany, updateJobAddress);
 
-module.exports = router
+module.exports = router;

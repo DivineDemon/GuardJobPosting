@@ -23,8 +23,8 @@ const guardProfile = (req, res) => {
             const guardToken = jwt.sign(
               {
                 id: rows[0].guardID,
-                isAdmin: rows[0].isAdmin,
-                isGuard: rows[0].isGuard,
+                isAdmin: parseInt(rows[0].isAdmin, 10),
+                isGuard: parseInt(rows[0].isGuard, 10),
                 isCompany: rows[0].isCompany,
               },
               SECRET,
@@ -99,7 +99,7 @@ const guardProfile = (req, res) => {
             });
 
             res.status(201).json({
-              status: true,
+              success: true,
               message: "Got Guard Profile!",
               guardProfile: {
                 guard,
@@ -172,7 +172,7 @@ const companyProfile = (req, res) => {
             });
 
             res.status(201).json({
-              status: true,
+              success: true,
               message: "Got Company Profile!",
               companyProfile: {
                 company,

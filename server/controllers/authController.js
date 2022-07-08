@@ -41,17 +41,31 @@ const addGuard = (req, res) => {
 };
 
 const addCompany = (req, res) => {
-  const { name, phone, email, password } = req.body;
+  const { companyName, phone, email, password } = req.body;
   connection.query(
-    `INSERT INTO company (name, phone, email, password) VALUES ('${name}', '${phone}', '${email}', '${password}')`,
-    (err, rows, fields) => {
-      if (!err) {
-        res
-          .status(201)
-          .json({ message: "Data Inserted Successfully!", data: rows });
+    `SELECT * FROM company WHERE email='${email}' OR phone='${phone}'`,
+    (err, rows) => {
+      if (!err && rows.length !== 0) {
+        res.status(409).json({
+            success: false,
+            message: "Company Already Exists!",
+        });
       } else {
-        res.status(500);
-        throw new Error(err);
+        connection.query(
+          `INSERT INTO company (companyName, phone, email, password) VALUES ('${companyName}', '${phone}', '${email}', '${password}')`,
+          (err, rows) => {
+            if (!err) {
+              res.status(201).json({
+                success: true,
+                message: "Company Registered Successfully!",
+                companyId: rows.insertId,
+              });
+            } else {
+              res.status(500);
+              throw new Error(err);
+            }
+          }
+        );
       }
     }
   );
@@ -69,7 +83,7 @@ const loginAdmin = (req, res) => {
             rows[0].password === password &&
             rows[0].email === email
           ) {
-            const accessToken = jwt.sign(
+            const adminToken = jwt.sign(
               {
                 id: rows[0].adminID,
                 isAdmin: rows[0].isAdmin,
@@ -87,7 +101,7 @@ const loginAdmin = (req, res) => {
               id: rows[0].adminID,
               email: rows[0].email,
               password,
-              accessToken,
+              adminToken,
             });
           } else {
             res.status(404);
@@ -114,7 +128,7 @@ const loginGuard = (req, res) => {
             rows[0].password === password &&
             rows[0].email === email
           ) {
-            const accessToken = jwt.sign(
+            const guardToken = jwt.sign(
               {
                 id: rows[0].guardID,
                 isAdmin: rows[0].isAdmin,
@@ -129,10 +143,20 @@ const loginGuard = (req, res) => {
             res.status(201).json({
               success: true,
               message: "Guard Logged In!",
-              data: {
-                id: rows[0].guardID,
+              guard: {
+                guardID: rows[0].guardID,
+                firstName: rows[0].firstName,
+                middleName: rows[0].middleName,
+                lastName: rows[0].lastName,
                 email: rows[0].email,
+                password: rows[0].password,
+                phone: rows[0].phone,
+                dob: rows[0].dob,
+                gender: rows[0].gender,
+                emergencyContact: rows[0].emergencyContact,
+                status: rows[0].status,
               },
+              guardToken,
             });
           } else {
             res.status(404);
@@ -174,10 +198,16 @@ const loginCompany = (req, res) => {
             res.status(201).json({
               success: true,
               message: "Company Logged In!",
-              data: {
-                id: rows[0].companyID,
-                email: rows[0].email,
+              companyProfile: {
+                company: {
+                  companyID: rows[0].companyID,
+                  name: rows[0].companyName,
+                  phone: rows[0].phone,
+                  email: rows[0].email,
+                  password: rows[0].password,
+                },
               },
+              companyToken,
             });
           } else {
             res.status(404);

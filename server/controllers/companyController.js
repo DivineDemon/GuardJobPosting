@@ -5,7 +5,8 @@ const getCompanies = (req, res) => {
     if (!err) {
       res.status(201).json(rows);
     } else {
-      res.status(500).json(err);
+      res.status(500);
+      throw new Error(err);
     }
   });
 };
@@ -17,7 +18,8 @@ const getCompany = (req, res) => {
       if (!err) {
         res.status(201).json(rows);
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -27,9 +29,12 @@ const deleteCompany = (req, res) => {
   const { id } = req.params;
   connection.query(`DELETE FROM company WHERE companyID=${id}`, (err, rows) => {
     if (!err) {
-      res.status(201).json({ message: "Company Deleted Successfully!" });
+      res
+        .status(201)
+        .json({ success: true, message: "Company Deleted Successfully!" });
     } else {
-      res.status(500).json(err);
+      res.status(500);
+      throw new Error(err);
     }
   });
 };
@@ -40,9 +45,12 @@ const updateCompany = (req, res) => {
     `UPDATE company SET name='${name}', phone='${phone}', email='${email}', password='${password}' WHERE companyID=${id}`,
     (err, rows) => {
       if (!err) {
-        res.status(201).json({ message: "Company Updated Successfully!" });
+        res
+          .status(201)
+          .json({ success: true, message: "Company Updated Successfully!" });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );

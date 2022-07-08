@@ -5,7 +5,8 @@ const getGuardAddresses = (req, res) => {
     if (!err) {
       res.status(201).json(rows);
     } else {
-      res.status(500).json(err);
+      res.status(500);
+      throw new Error(err);
     }
   });
 };
@@ -17,7 +18,8 @@ const getGuardAddress = (req, res) => {
       if (!err) {
         res.status(201).json(rows);
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -33,11 +35,12 @@ const addGuardAddress = (req, res) => {
         res.status(201).json({
           success: true,
           message: "Guard Address Inserted Successfully!",
-          data: rows,
+          data: req.body,
           id: rows.insertId,
         });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -51,9 +54,13 @@ const deleteGuardAddress = (req, res) => {
       if (!err) {
         res
           .status(201)
-          .json({ message: "Guard Address Deleted Successfully!" });
+          .json({
+            success: true,
+            message: "Guard Address Deleted Successfully!",
+          });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -67,9 +74,13 @@ const updateGuardAddress = (req, res) => {
       if (!err) {
         res
           .status(201)
-          .json({ message: "Guard Address Updated Successfully!" });
+          .json({
+            success: true,
+            message: "Guard Address Updated Successfully!",
+          });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );

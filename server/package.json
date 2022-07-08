@@ -2,10 +2,10 @@
   "name": "server",
   "version": "1.0.0",
   "description": "MySQL Backend for Guard Job Posting API",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",

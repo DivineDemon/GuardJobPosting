@@ -5,7 +5,8 @@ const getOtherdocs = (req, res) => {
     if (!err) {
       res.status(201).json(rows);
     } else {
-      res.status(500).json(err);
+      res.status(500);
+      throw new Error(err);
     }
   });
 };
@@ -17,7 +18,8 @@ const getOtherdoc = (req, res) => {
       if (!err) {
         res.status(201).json(rows);
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -32,9 +34,14 @@ const addOtherdocs = (req, res) => {
       if (!err) {
         res
           .status(201)
-          .json({ message: "Data Inserted Successfully!", data: rows });
+          .json({
+            success: true,
+            message: "Data Inserted Successfully!",
+            data: req.body,
+          });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -48,9 +55,13 @@ const deleteOtherdocs = (req, res) => {
       if (!err) {
         res
           .status(201)
-          .json({ message: "Other Documents Deleted Successfully!" });
+          .json({
+            success: true,
+            message: "Other Documents Deleted Successfully!",
+          });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -65,9 +76,13 @@ const updateOtherdocs = (req, res) => {
       if (!err) {
         res
           .status(201)
-          .json({ message: "Other Documents Updated Successfully!" });
+          .json({
+            success: true,
+            message: "Other Documents Updated Successfully!",
+          });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );

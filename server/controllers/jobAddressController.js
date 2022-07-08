@@ -5,7 +5,8 @@ const getJobAddresses = (req, res) => {
     if (!err) {
       res.status(201).json(rows);
     } else {
-      res.status(500).json(err);
+      res.status(500);
+      throw new Error(err);
     }
   });
 };
@@ -17,7 +18,8 @@ const getJobAddress = (req, res) => {
       if (!err) {
         res.status(201).json(rows);
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -33,11 +35,12 @@ const addJobAddress = (req, res) => {
         res.status(201).json({
           success: true,
           message: "Job Address Inserted Successfully!",
-          data: rows,
+          data: req.body,
           id: rows.insertId,
         });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -49,9 +52,15 @@ const deleteJobAddress = (req, res) => {
     `DELETE FROM jobaddress WHERE jobAddressId=${id}`,
     (err, rows) => {
       if (!err) {
-        res.status(201).json({ message: "Job Address Deleted Successfully!" });
+        res
+          .status(201)
+          .json({
+            success: true,
+            message: "Job Address Deleted Successfully!",
+          });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -63,9 +72,15 @@ const updateJobAddress = (req, res) => {
     `UPDATE jobaddress SET state='${req.body.state}', city='${req.body.city}', postalCode='${req.body.postalCode}', fk_job=${job_id} WHERE jobAddressId=${address_id}`,
     (err, rows) => {
       if (!err) {
-        res.status(201).json({ message: "Job Address Updated Successfully!" });
+        res
+          .status(201)
+          .json({
+            success: true,
+            message: "Job Address Updated Successfully!",
+          });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );

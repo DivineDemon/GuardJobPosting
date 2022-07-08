@@ -4,7 +4,8 @@ const rowsPerPage = process.env.ROWS || 25;
 const getBanks = (req, res) => {
   connection.query("SELECT * FROM bank", (err, rows) => {
     if (err) {
-      res.status(500).json(err);
+      res.status(500);
+      throw new Error(err);
     }
 
     const numOfRows = rows.length;
@@ -21,7 +22,8 @@ const getBanks = (req, res) => {
       `SELECT * FROM bank LIMIT ${startingLimit}, ${rowsPerPage}`,
       (err, rows) => {
         if (err) {
-          res.status(500).json(err);
+          res.status(500);
+          throw new Error(err);
         }
 
         let iterator = page - 5 < 1 ? 1 : page - 5;
@@ -44,7 +46,8 @@ const getBank = (req, res) => {
       if (!err) {
         res.status(201).json(rows);
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -97,9 +100,12 @@ const deleteBank = (req, res) => {
   const { id } = req.params;
   connection.query(`DELETE FROM bank WHERE bankID=${id}`, (err, rows) => {
     if (!err) {
-      res.status(201).json({ message: "Bank Deleted Successfully!" });
+      res
+        .status(201)
+        .json({ success: true, message: "Bank Deleted Successfully!" });
     } else {
-      res.status(500).json(err);
+      res.status(500);
+      throw new Error(err);
     }
   });
 };

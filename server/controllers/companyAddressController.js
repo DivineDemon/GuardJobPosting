@@ -5,7 +5,8 @@ const getCompanyAddresses = (req, res) => {
     if (!err) {
       res.status(201).json(rows);
     } else {
-      res.status(500).json(err);
+      res.status(500);
+      throw new Error(err);
     }
   });
 };
@@ -17,7 +18,8 @@ const getCompanyAddress = (req, res) => {
       if (!err) {
         res.status(201).json(rows);
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -33,11 +35,12 @@ const addCompanyAddress = (req, res) => {
         res.status(201).json({
           success: true,
           message: "Company Address Inserted Successfully!",
-          data: rows,
+          data: req.body,
           id: rows.insertId,
         });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -51,9 +54,13 @@ const deleteCompanyAddress = (req, res) => {
       if (!err) {
         res
           .status(201)
-          .json({ message: "Company Address Deleted Successfully!" });
+          .json({
+            success: true,
+            message: "Company Address Deleted Successfully!",
+          });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );
@@ -67,9 +74,13 @@ const updateCompanyAddress = (req, res) => {
       if (!err) {
         res
           .status(201)
-          .json({ message: "Company Address Updated Successfully!" });
+          .json({
+            success: true,
+            message: "Company Address Updated Successfully!",
+          });
       } else {
-        res.status(500).json(err);
+        res.status(500);
+        throw new Error(err);
       }
     }
   );

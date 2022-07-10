@@ -98,7 +98,7 @@ const guardProfile = (req, res) => {
               }
             });
 
-            res.status(201).json({
+            res.status(200).json({
               success: true,
               message: "Got Guard Profile!",
               guardProfile: {
@@ -111,15 +111,19 @@ const guardProfile = (req, res) => {
               guardToken,
             });
           } else {
-            res.status(404);
-            throw new Error("Guard Not Found!");
+            res.status(404).json({
+              success: false,
+              message: "Guard Not Found!",
+            });
           }
         }
       );
     }
   } catch (error) {
-    res.status(500);
-    throw new Error(error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
@@ -171,7 +175,7 @@ const companyProfile = (req, res) => {
               }
             });
 
-            res.status(201).json({
+            res.status(200).json({
               success: true,
               message: "Got Company Profile!",
               companyProfile: {
@@ -181,15 +185,19 @@ const companyProfile = (req, res) => {
               companyToken,
             });
           } else {
-            res.status(404);
-            throw new Error("Company Not Found!");
+            res.status(404).json({
+              success: false,
+              message: "Company Not Found!",
+            });
           }
         }
       );
     }
   } catch (error) {
-    res.status(500);
-    throw new Error(error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 

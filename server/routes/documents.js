@@ -11,6 +11,6 @@ const router = express.Router();
 
 router.route("/").get(getDocuments);
 router.route("/:id").delete(deleteDocument).get(getDocument);
-router.route("/:guard_id").post(addDocument);
+router.route("/guard/:guard_id").post(addDocument);
 
 module.exports = router;

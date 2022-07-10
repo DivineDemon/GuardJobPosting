@@ -5,70 +5,109 @@ const SECRET = "guard-recruiting-app" || process.env.SECRET;
 
 const addGuard = (req, res) => {
   try {
+    const {
+      firstName,
+      middleName,
+      lastName,
+      email,
+      password,
+      phone,
+      dob,
+      gender,
+      emergenctContact,
+    } = req.body;
     connection.query(
-      `INSERT INTO guard (firstName, middleName, lastName, email, password, phone, dob, gender, emergencyContact) VALUES ('${req.body.firstName}', '${req.body.middleName}', '${req.body.lastName}', '${req.body.email}', '${req.body.password}', '${req.body.phone}', '${req.body.dob}', '${req.body.gender}', '${req.body.emergencyContact}')`,
-      (err, rows, fields) => {
-        if (!err) {
-          res.status(201).json({
-            success: true,
-            guardProfile: {
-              guard: {
-                guardID: rows.insertId,
-                firstName: req.body.firstName,
-                middleName: req.body.middleName,
-                lastName: req.body.lastName,
-                email: req.body.email,
-                phone: req.body.phone,
-                dob: req.body.dob,
-                gender: req.body.gender,
-                emergencyContact: req.body.emergencyContact,
-              },
-              address: {},
-              documents: {},
-              bank: {},
-            },
+      `SELECT * FROM guard WHERE email='${email} OR phone='${phone}'`,
+      (err, rows) => {
+        if (!err && rows.length !== 0) {
+          res.status(409).json({
+            success: false,
+            message: "Guard Already Exists!",
           });
         } else {
-          res.status(500);
-          throw new Error(err);
+          connection.query(
+            `INSERT INTO guard (firstName, middleName, lastName, email, password, phone, dob, gender, emergencyContact) VALUES ('${firstName}', '${middleName}', '${lastName}', '${email}', '${password}', '${phone}', '${dob}', '${gender}', '${emergencyContact}')`,
+            (err, rows) => {
+              if (!err) {
+                res.status(201).json({
+                  success: true,
+                  message: "Guard Registered Successfully!",
+                  guardProfile: {
+                    guard: {
+                      guardID: rows.insertId,
+                      firstName,
+                      middleName,
+                      lastName,
+                      email,
+                      phone,
+                      dob,
+                      gender,
+                      emergencyContact,
+                    },
+                    address: {},
+                    documents: {},
+                    bank: {},
+                  },
+                });
+              } else {
+                res.status(400).json({
+                  success: false,
+                  message: "Please Try Again!",
+                });
+              }
+            }
+          );
         }
       }
     );
   } catch (error) {
-    res.status(500);
-    throw new Error(error);
+    res.status(500).json({
+      success: false,
+      message: "Guard Insertion Failure!",
+      error: error.message,
+    });
   }
 };
 
 const addCompany = (req, res) => {
-  const { companyName, phone, email, password } = req.body;
-  connection.query(
-    `SELECT * FROM company WHERE email='${email}' OR phone='${phone}'`,
-    (err, rows) => {
-      if (!err && rows.length !== 0) {
-        res.status(409).json({
+  try {
+    const { companyName, phone, email, password } = req.body;
+    connection.query(
+      `SELECT * FROM company WHERE email='${email}' OR phone='${phone}'`,
+      (err, rows) => {
+        if (!err && rows.length !== 0) {
+          res.status(409).json({
             success: false,
             message: "Company Already Exists!",
-        });
-      } else {
-        connection.query(
-          `INSERT INTO company (companyName, phone, email, password) VALUES ('${companyName}', '${phone}', '${email}', '${password}')`,
-          (err, rows) => {
-            if (!err) {
-              res.status(201).json({
-                success: true,
-                message: "Company Registered Successfully!",
-                companyId: rows.insertId,
-              });
-            } else {
-              res.status(500);
-              throw new Error(err);
+          });
+        } else {
+          connection.query(
+            `INSERT INTO company (companyName, phone, email, password) VALUES ('${companyName}', '${phone}', '${email}', '${password}')`,
+            (err, rows) => {
+              if (!err) {
+                res.status(201).json({
+                  success: true,
+                  message: "Company Registered Successfully!",
+                  companyId: rows.insertId,
+                });
+              } else {
+                res.status(400).json({
+                  success: false,
+                  message: "Please Try Again!",
+                });
+              }
             }
-          }
-        );
+          );
+        }
       }
-    }
-  );
+    );
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Company Insertion Failure!",
+      error: error.message,
+    });
+  }
 };
 
 const loginAdmin = (req, res) => {
@@ -76,13 +115,9 @@ const loginAdmin = (req, res) => {
     const { email, password, isAdmin } = req.body;
     if (isAdmin === 1) {
       connection.query(
-        `SELECT * FROM admin WHERE email='${email}'`,
+        `SELECT * FROM admin WHERE email='${email}' AND password='${password}'`,
         function (err, rows) {
-          if (
-            !err &&
-            rows[0].password === password &&
-            rows[0].email === email
-          ) {
+          if (!err) {
             const adminToken = jwt.sign(
               {
                 id: rows[0].adminID,
@@ -95,7 +130,7 @@ const loginAdmin = (req, res) => {
                 expiresIn: "7d",
               }
             );
-            res.status(201).json({
+            res.status(200).json({
               success: true,
               message: "Admin Logged In!",
               id: rows[0].adminID,
@@ -104,15 +139,20 @@ const loginAdmin = (req, res) => {
               adminToken,
             });
           } else {
-            res.status(404);
-            throw new Error("Admin Not Found!");
+            res.status(401).json({
+              success: false,
+              message: "Invalid Credentials!",
+            });
           }
         }
       );
     }
   } catch (error) {
-    res.status(500);
-    throw new Error(error);
+    res.status(404).json({
+      success: false,
+      message: "Admin Not Found!",
+      error: error.message,
+    });
   }
 };
 
@@ -121,13 +161,9 @@ const loginGuard = (req, res) => {
     const { email, password, isAdmin } = req.body;
     if (isAdmin === 0) {
       connection.query(
-        `SELECT * FROM guard WHERE email='${email}'`,
+        `SELECT * FROM guard WHERE email='${email}' AND password='${password}'`,
         function (err, rows) {
-          if (
-            !err &&
-            rows[0].password === password &&
-            rows[0].email === email
-          ) {
+          if (!err) {
             const guardToken = jwt.sign(
               {
                 id: rows[0].guardID,
@@ -140,7 +176,7 @@ const loginGuard = (req, res) => {
                 expiresIn: "7d",
               }
             );
-            res.status(201).json({
+            res.status(200).json({
               success: true,
               message: "Guard Logged In!",
               guard: {
@@ -159,15 +195,20 @@ const loginGuard = (req, res) => {
               guardToken,
             });
           } else {
-            res.status(404);
-            throw new Error("Guard Not Found!");
+            res.status(401).json({
+              success: false,
+              message: "Invalid Credentials!",
+            });
           }
         }
       );
     }
   } catch (error) {
-    res.status(500);
-    throw new Error(error);
+    res.status(404).json({
+      success: false,
+      message: "Guard Not Found!",
+      error: error.message,
+    });
   }
 };
 
@@ -176,13 +217,9 @@ const loginCompany = (req, res) => {
     const { email, password, isAdmin } = req.body;
     if (isAdmin === 0) {
       connection.query(
-        `SELECT * FROM company WHERE email='${email}'`,
+        `SELECT * FROM company WHERE email='${email}' AND password='${password}'`,
         function (err, rows) {
-          if (
-            !err &&
-            rows[0].password === password &&
-            rows[0].email === email
-          ) {
+          if (!err) {
             const companyToken = jwt.sign(
               {
                 id: rows[0].companyID,
@@ -195,7 +232,7 @@ const loginCompany = (req, res) => {
                 expiresIn: "7d",
               }
             );
-            res.status(201).json({
+            res.status(200).json({
               success: true,
               message: "Company Logged In!",
               companyProfile: {
@@ -210,15 +247,20 @@ const loginCompany = (req, res) => {
               companyToken,
             });
           } else {
-            res.status(404);
-            throw new Error("Company Not Found!");
+            res.status(401).json({
+              success: false,
+              message: "Invalid Credentials!",
+            });
           }
         }
       );
     }
   } catch (error) {
-    res.status(500);
-    throw new Error(error);
+    res.status(404).json({
+      success: false,
+      message: "Company Not Found!",
+      error: error.message,
+    });
   }
 };
 

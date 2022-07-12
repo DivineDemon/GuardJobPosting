@@ -192,6 +192,71 @@ const applyShift = (req, res) => {
   }
 };
 
+const getAppliedShifts = (req, res) => {
+  try {
+    connection.query(
+      "SELECT shift.shiftID, shift.startTime, shift.endTime, shift.date, shift.isBooked, guard.guardID, guard.firstName, guard.middleName, guard.lastName FROM jobrequest INNER JOIN shift ON jobrequest.fk_shift = shift.shiftID INNER JOIN guard ON jobrequest.fk_guard = guard.guardID WHERE shift.isBooked = 0 GROUP BY shift.shiftID",
+      (err, rows) => {
+        if (!err) {
+          let guard = {};
+          rows.forEach((row, i) => {
+            guard = {
+              guardID: rows[i].guardID,
+              guardFirstName: rows[i].firstName,
+              guardMiddleName: rows[i].middleName,
+              guardLastName: rows[i].lastName,
+              shift: {
+                shiftID: rows[i].shiftID,
+                startTime: rows[i].startTime,
+                endTime: rows[i].endTime,
+                date: rows[i].date,
+              },
+            };
+          });
+          res.status(200).json({
+            success: true,
+            message: "Successfully Retrieved Applied Shifts!",
+            guard,
+          });
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const approveShift = (req, res) => {
+  try {
+    const { shift_id, guard_id } = req.params;
+    const { isBooked } = req.body;
+    connection.query(
+      `UPDATE shift SET isBooked=${isBooked}, fk_guard=${guard_id} WHERE shiftID=${shift_id}`,
+      (err, rows) => {
+        if (!err) {
+          res.status(200).json({
+            success: true,
+            message: `Successfully Approved Shift #${shift_id} for Guard #${guard_id}`,
+          });
+        } else {
+          res.status(404).json({
+            success: false,
+            message: "Shift Not Found!",
+          });
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getGuardShifts,
   getJobShifts,
@@ -200,4 +265,6 @@ module.exports = {
   deleteShift,
   updateShift,
   applyShift,
+  getAppliedShifts,
+  approveShift,
 };

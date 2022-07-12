@@ -194,8 +194,9 @@ const applyShift = (req, res) => {
 
 const getAppliedShifts = (req, res) => {
   try {
+    const { company_id } = req.params;
     connection.query(
-      "SELECT shift.shiftID, shift.startTime, shift.endTime, shift.date, shift.isBooked, guard.guardID, guard.firstName, guard.middleName, guard.lastName FROM jobrequest INNER JOIN shift ON jobrequest.fk_shift = shift.shiftID INNER JOIN guard ON jobrequest.fk_guard = guard.guardID WHERE shift.isBooked = 0 GROUP BY shift.shiftID",
+      `SELECT shift.shiftID, shift.startTime, shift.endTime, shift.date, shift.isBooked, guard.guardID, guard.firstName, guard.middleName, guard.lastName, jobs.company_fk FROM jobrequest INNER JOIN shift ON jobrequest.fk_shift = shift.shiftID INNER JOIN guard ON jobrequest.fk_guard = guard.guardID INNER JOIN jobs ON jobs.jobsID = jobrequest.fk_job WHERE shift.isBooked = 0 AND jobs.company_fk = ${company_id} GROUP BY shift.shiftID`,
       (err, rows) => {
         if (!err) {
           let guard = {};

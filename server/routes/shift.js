@@ -16,8 +16,10 @@ const {
 } = require("../middleware/verifyToken");
 const router = express.Router();
 
-router.route("/").get(verifyTokenAndCompany, getAppliedShifts);
 router.route("/:id").delete(verifyTokenAndCompany, deleteShift).get(getShift);
+router
+  .route("/company/:company_id")
+  .get(verifyTokenAndCompany, getAppliedShifts);
 router.route("/guard/:guard_id").get(getGuardShifts);
 router
   .route("/job/:job_id")

@@ -214,12 +214,14 @@ const getAppliedShifts = (req, res) => {
                 documentList: rows[i].documentList,
                 lat: rows[i].lat,
                 lng: rows[i].lng,
-                shift: {
-                  shiftID: rows[i].shiftID,
-                  startTime: rows[i].startTime,
-                  endTime: rows[i].endTime,
-                  date: rows[i].date,
-                },
+                shift: [
+                  {
+                    shiftID: rows[i].shiftID,
+                    startTime: rows[i].startTime,
+                    endTime: rows[i].endTime,
+                    date: rows[i].date,
+                  },
+                ],
               },
             };
           });

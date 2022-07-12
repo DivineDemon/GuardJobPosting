@@ -196,7 +196,7 @@ const getAppliedShifts = (req, res) => {
   try {
     const { company_id } = req.params;
     connection.query(
-      `SELECT shift.shiftID, shift.startTime, shift.endTime, shift.date, shift.isBooked, guard.guardID, guard.firstName, guard.middleName, guard.lastName, jobs.company_fk FROM jobrequest INNER JOIN shift ON jobrequest.fk_shift = shift.shiftID INNER JOIN guard ON jobrequest.fk_guard = guard.guardID INNER JOIN jobs ON jobs.jobsID = jobrequest.fk_job WHERE shift.isBooked = 0 AND jobs.company_fk = ${company_id} GROUP BY shift.shiftID`,
+      `SELECT shift.shiftID, shift.startTime, shift.endTime, shift.date, shift.isBooked, guard.guardID, guard.firstName, guard.middleName, guard.lastName, jobs.company_fk, jobs.jobsID, jobs.jobName, jobs.description, jobs.payrate, jobs.documentList, jobs.lat, jobs.lng FROM jobrequest INNER JOIN shift ON jobrequest.fk_shift = shift.shiftID INNER JOIN guard ON jobrequest.fk_guard = guard.guardID INNER JOIN jobs ON jobs.jobsID = jobrequest.fk_job WHERE shift.isBooked = 0 AND jobs.company_fk = ${company_id} GROUP BY shift.shiftID`,
       (err, rows) => {
         if (!err) {
           let guard = {};
@@ -206,18 +206,27 @@ const getAppliedShifts = (req, res) => {
               guardFirstName: rows[i].firstName,
               guardMiddleName: rows[i].middleName,
               guardLastName: rows[i].lastName,
-              shift: {
-                shiftID: rows[i].shiftID,
-                startTime: rows[i].startTime,
-                endTime: rows[i].endTime,
-                date: rows[i].date,
+              job: {
+                jobID: rows[i].jobID,
+                jobName: rows[i].jobName,
+                jobDescription: rows[i].description,
+                payrate: rows[i].payrate,
+                documentList: rows[i].documentList,
+                lat: rows[i].lat,
+                lng: rows[i].lng,
+                shift: {
+                  shiftID: rows[i].shiftID,
+                  startTime: rows[i].startTime,
+                  endTime: rows[i].endTime,
+                  date: rows[i].date,
+                },
               },
             };
           });
           res.status(200).json({
             success: true,
             message: "Successfully Retrieved Applied Shifts!",
-            guard,
+            guard: [guard],
           });
         }
       }

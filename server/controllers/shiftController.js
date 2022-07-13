@@ -217,9 +217,9 @@ const getAppliedShifts = (req, res) => {
                 shift: [
                   {
                     shiftID: rows[i].shiftID,
-                    startTime: rows[i].startTime,
-                    endTime: rows[i].endTime,
-                    date: rows[i].date,
+                    shiftStartTime: rows[i].startTime,
+                    shiftEndTime: rows[i].endTime,
+                    shiftDate: rows[i].date,
                   },
                 ],
               },
@@ -241,26 +241,28 @@ const getAppliedShifts = (req, res) => {
   }
 };
 
-const approveShift = (req, res) => {
+const approveShifts = (req, res) => {
   try {
-    const { shift_id, guard_id } = req.params;
-    const { isBooked } = req.body;
-    connection.query(
-      `UPDATE shift SET isBooked=${isBooked}, fk_guard=${guard_id} WHERE shiftID=${shift_id}`,
-      (err, rows) => {
-        if (!err) {
-          res.status(200).json({
-            success: true,
-            message: `Successfully Approved Shift #${shift_id} for Guard #${guard_id}`,
-          });
-        } else {
-          res.status(404).json({
-            success: false,
-            message: "Shift Not Found!",
-          });
+    const { guard_id } = req.params;
+    const { shiftIDs, isBooked } = req.body;
+    shiftIDs.map((shift_id) => {
+      connection.query(
+        `UPDATE shift SET isBooked=${isBooked}, fk_guard=${guard_id} WHERE shiftID=${shift_id}`,
+        (err, rows) => {
+          if (!err) {
+            res.status(200).json({
+              success: true,
+              message: `Successfully Approved Shift #${shift_id} for Guard #${guard_id}`,
+            });
+          } else {
+            res.status(404).json({
+              success: false,
+              message: "Shift Not Found!",
+            });
+          }
         }
-      }
-    );
+      );
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -278,5 +280,5 @@ module.exports = {
   updateShift,
   applyShift,
   getAppliedShifts,
-  approveShift,
+  approveShifts,
 };

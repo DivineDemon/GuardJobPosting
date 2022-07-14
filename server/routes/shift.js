@@ -29,8 +29,6 @@ router
   .route("/:shift_id/:job_id/:guard_id")
   .patch(verifyTokenAndCompany, updateShift);
 router.route("/apply/:job_id/:guard_id").post(verifyTokenAndGuard, applyShift);
-router
-  .route("/approve/guard/:guard_id")
-  .patch(verifyTokenAndCompany, approveShifts);
+router.put("/approve/guard/:guard_id", verifyTokenAndCompany, approveShifts);
 
 module.exports = router;

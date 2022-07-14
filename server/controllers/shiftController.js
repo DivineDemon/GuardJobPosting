@@ -245,24 +245,24 @@ const approveShifts = (req, res) => {
   try {
     const { guard_id } = req.params;
     const { shiftIDs, isBooked } = req.body;
-    shiftIDs.map((shift_id) => {
-      connection.query(
-        `UPDATE shift SET isBooked=${isBooked}, fk_guard=${guard_id} WHERE shiftID=${shift_id}`,
-        (err, rows) => {
-          if (!err) {
-            res.status(200).json({
-              success: true,
-              message: `Successfully Approved Shift #${shift_id} for Guard #${guard_id}`,
-            });
-          } else {
-            res.status(404).json({
-              success: false,
-              message: "Shift Not Found!",
-            });
-          }
+    connection.query(
+      "UPDATE shift SET isBooked = ?, fk_guard = ? WHERE shiftID IN (?)",
+      [isBooked, guard_id, shiftIDs],
+      (err, rows) => {
+        if (!err) {
+          res.status(200).json({
+            success: true,
+            message: `Successfully Approved Shift!`,
+          });
+        } else {
+          res.status(404).json({
+            success: false,
+            message: "Shift Not Found!",
+            error: err.message,
+          });
         }
-      );
-    });
+      }
+    );
   } catch (error) {
     res.status(500).json({
       success: false,

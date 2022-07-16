@@ -23,7 +23,8 @@ app.use("/public_html/shifts", require("./routes/shift"));
 app.use("/public_html/auth", require("./routes/auth"));
 app.use("/public_html/profile", require("./routes/profile"));
 app.use("/public_html/otherDocs", require("./routes/otherDocs"));
-app.use("/cards", require("./routes/card"));
+app.use("/public_html/cards", require("./routes/card"));
+app.use("/public_html/companyDocuments", require("./routes/companyDocuments"));
 
 // Starting the App
 const PORT = process.env.PORT || 3000;

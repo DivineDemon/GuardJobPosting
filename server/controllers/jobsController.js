@@ -111,15 +111,7 @@ const getCompanyJobs = (req, res) => {
           res.status(200).json({
             success: true,
             message: "Succesfully Retrieved Jobs Data!",
-            job: {
-              ID: rows[0].jobsID,
-              name: rows[0].jobName,
-              lat: rows[0].lat,
-              lng: rows[0].lng,
-              description: rows[0].description,
-              payrate: rows[0].payrate,
-              documentList: rows[0].documentList,
-            },
+            job: [rows],
           });
         } else {
           res.status(404).json({

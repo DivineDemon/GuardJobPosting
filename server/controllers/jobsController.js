@@ -108,10 +108,21 @@ const getCompanyJobs = (req, res) => {
       `SELECT * FROM jobs WHERE company_fk = ${company_id}`,
       (err, rows) => {
         if (!err) {
+          const jobs = [];
+          rows.forEach((row, i) => {
+            const job = {
+              jobsID: rows[i].jobsID,
+              jobName: rows[i].jobName,
+              description: rows[i].description,
+              payrate: rows[i].payrate,
+              documentList: rows[i].documentList,
+            };
+            jobs.push(job);
+          });
           res.status(200).json({
             success: true,
             message: "Succesfully Retrieved Jobs Data!",
-            job: [rows],
+            jobs,
           });
         } else {
           res.status(404).json({

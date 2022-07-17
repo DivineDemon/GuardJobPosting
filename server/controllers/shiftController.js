@@ -273,7 +273,7 @@ const approveShifts = (req, res) => {
 
 const getApprovedShifts = (req, res) => {
   try {
-    connection.query(`SELECT * FROM shift WHERE isBooked=1`, (err, rows) => {
+    connection.query("SELECT * FROM shift WHERE isBooked=1", (err, rows) => {
       if (!err) {
         res.status(200).json({
           success: true,

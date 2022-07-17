@@ -117,7 +117,12 @@ const loginAdmin = (req, res) => {
       connection.query(
         `SELECT * FROM admin WHERE email='${email}' AND password='${password}'`,
         function (err, rows) {
-          if (!err) {
+          if (err || rows.length === 0) {
+            res.status(401).json({
+              success: false,
+              message: "Invalid Credentials!",
+            });
+          } else {
             const adminToken = jwt.sign(
               {
                 id: rows[0].adminID,
@@ -137,11 +142,6 @@ const loginAdmin = (req, res) => {
               email: rows[0].email,
               password,
               adminToken,
-            });
-          } else {
-            res.status(401).json({
-              success: false,
-              message: "Invalid Credentials!",
             });
           }
         }
@@ -163,7 +163,12 @@ const loginGuard = (req, res) => {
       connection.query(
         `SELECT * FROM guard WHERE email='${email}' AND password='${password}'`,
         function (err, rows) {
-          if (!err) {
+          if (err || rows.length === 0) {
+            res.status(401).json({
+              success: false,
+              message: "Invalid Credentials!",
+            });
+          } else {
             const guardToken = jwt.sign(
               {
                 id: rows[0].guardID,
@@ -194,11 +199,6 @@ const loginGuard = (req, res) => {
               },
               guardToken,
             });
-          } else {
-            res.status(401).json({
-              success: false,
-              message: "Invalid Credentials!",
-            });
           }
         }
       );
@@ -219,7 +219,12 @@ const loginCompany = (req, res) => {
       connection.query(
         `SELECT * FROM company WHERE email='${email}' AND password='${password}'`,
         function (err, rows) {
-          if (!err) {
+          if (err || rows.length === 0) {
+            res.status(401).json({
+              success: false,
+              message: "Invalid Credentials!",
+            });
+          } else {
             const companyToken = jwt.sign(
               {
                 id: rows[0].companyID,
@@ -245,11 +250,6 @@ const loginCompany = (req, res) => {
                 },
               },
               companyToken,
-            });
-          } else {
-            res.status(401).json({
-              success: false,
-              message: "Invalid Credentials!",
             });
           }
         }

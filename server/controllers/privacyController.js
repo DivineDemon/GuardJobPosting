@@ -1,3 +1,5 @@
+const { connection } = require("../db");
+
 const getPolicy = (req, res) => {
   try {
     connection.query("SELECT * FROM privacypolicy", (err, rows) => {

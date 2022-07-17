@@ -271,6 +271,30 @@ const approveShifts = (req, res) => {
   }
 };
 
+const getApprovedShifts = (req, res) => {
+  try {
+    connection.query(`SELECT * FROM shift WHERE isBooked=1`, (err, rows) => {
+      if (!err) {
+        res.status(200).json({
+          success: true,
+          message: "Successfully Retrieved All Approved Shifts!",
+          data: rows,
+        });
+      } else {
+        res.status(404).json({
+          success: false,
+          message: "Approved Shifts Not Found!",
+        });
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getGuardShifts,
   getJobShifts,
@@ -281,4 +305,5 @@ module.exports = {
   applyShift,
   getAppliedShifts,
   approveShifts,
+  getApprovedShifts,
 };

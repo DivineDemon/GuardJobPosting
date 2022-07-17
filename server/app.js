@@ -10,6 +10,9 @@ app.use(express.json({ limit: "200mb", extended: true }));
 app.use(express.urlencoded({ limit: "200mb", extended: true }));
 app.use(cors());
 
+// Static Routes
+app.use("/public_html", express.static(__dirname + "/assets"));
+
 // Routes
 app.use("/public_html/guardAddress", require("./routes/guardAddress"));
 app.use("/public_html/jobAddress", require("./routes/jobAddress"));
@@ -25,7 +28,6 @@ app.use("/public_html/profile", require("./routes/profile"));
 app.use("/public_html/otherDocs", require("./routes/otherDocs"));
 app.use("/public_html/cards", require("./routes/card"));
 app.use("/public_html/companyDocuments", require("./routes/companyDocuments"));
-app.use("/public_html/privacy-policy", require("./routes/privacyPolicy"));
 
 // Starting the App
 const PORT = process.env.PORT || 3000;

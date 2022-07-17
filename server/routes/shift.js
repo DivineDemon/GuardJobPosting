@@ -10,6 +10,7 @@ const {
   getAppliedShifts,
   approveShifts,
   getApprovedShifts,
+  getCompanyShifts,
 } = require("../controllers/shiftController");
 const {
   verifyTokenAndCompany,
@@ -32,5 +33,6 @@ router
 router.route("/apply/:job_id/:guard_id").post(verifyTokenAndGuard, applyShift);
 router.put("/approve/guard/:guard_id", verifyTokenAndCompany, approveShifts);
 router.get("/approved", getApprovedShifts);
+router.get("/company/approved/:company_id", getCompanyShifts);
 
 module.exports = router;

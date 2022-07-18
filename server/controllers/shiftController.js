@@ -56,45 +56,29 @@ const getGuardShifts = (req, res) => {
 const getCompanyShifts = (req, res) => {
   try {
     const { company_id } = req.params;
+    const { isBooked } = req.body;
     connection.query(
-      `SELECT * FROM jobs WHERE company_fk=${company_id}`,
+      `SELECT * FROM shift WHERE isBooked=${isBooked} AND comfk=${company_id}`,
       (err, rows) => {
         if (!err) {
-          connection.query(
-            `SELECT * FROM shift WHERE isBooked=1 AND fk_job IN (?)`,
-            [rows.jobsID],
-            (err, rows) => {
-              if (!err) {
-                const shifts = [];
-                rows.forEach((row, i) => {
-                  const shift = {
-                    shiftID: rows[i].shiftID,
-                    shiftStartTime: rows[i].startTime,
-                    shiftEndTime: rows[i].endTime,
-                    shiftDate: rows[i].date,
-                    isBooked: rows[i].isBooked,
-                    fk_job: rows[i].fk_job,
-                    fk_guard: rows[i].fk_guard,
-                  };
-                  shifts.push(shift);
-                });
-                res.status(200).json({
-                  success: true,
-                  message: "Successfully Retrieved Company Shifts!",
-                  shifts,
-                });
-              } else {
-                res.status(404).json({
-                  success: false,
-                  message: "Company Shifts Not Found!",
-                });
-              }
-            }
-          );
-        } else {
-          res.status(404).json({
-            success: false,
-            message: "Company Jobs Not Found!",
+          const shifts = [];
+          rows.forEach((row, i) => {
+            const shift = {
+              shiftID: rows[i].shiftID,
+              shiftStartTime: rows[i].startTime,
+              shiftEndTime: rows[i].endTime,
+              shiftDate: rows[i].date,
+              isBooked: rows[i].isBooked,
+              fk_job: rows[i].fk_job,
+              fk_guard: rows[i].fk_guard,
+            };
+            shifts.push(shift);
+          });
+
+          res.status(200).json({
+            success: true,
+            message: "Successfully Retrieved Company Shifts!",
+            shifts,
           });
         }
       }

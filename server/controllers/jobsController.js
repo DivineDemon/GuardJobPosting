@@ -219,6 +219,40 @@ const updateJob = (req, res) => {
   }
 };
 
+const getAppliedJobs = (req, res) => {
+  try {
+    const { job_id, guard_id } = req.params;
+    connection.query(
+      `SELECT * FROM jobrequest WHERE fk_job=${job_id} AND fk_guard=${guard_id}`,
+      (err, rows) => {
+        if (!err) {
+          const appliedJobs = [];
+          rows.forEach((row, i) => {
+            const job = rows[i].fk_job;
+            job.push(appliedJobs);
+          });
+
+          res.status(200).json({
+            success: true,
+            message: "Successfully Retrieved Applied Jobs for Guard!",
+            appliedJobs,
+          });
+        } else {
+          res.status(404).json({
+            success: false,
+            message: "No Jobs Applied For!",
+          });
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getJobs,
   getJob,
@@ -226,4 +260,5 @@ module.exports = {
   deleteJob,
   updateJob,
   getCompanyJobs,
+  getAppliedJobs,
 };

@@ -6,6 +6,7 @@ const {
   getJob,
   updateJob,
   getCompanyJobs,
+  getAppliedJobs,
 } = require("../controllers/jobsController");
 const {
   verifyTokenAndGuard,
@@ -22,5 +23,6 @@ router
   .route("/company/:company_id")
   .get(getCompanyJobs)
   .post(verifyTokenAndCompany, addJob);
+router.get("/applied/:job_id/:guard_id", getAppliedJobs);
 
 module.exports = router;

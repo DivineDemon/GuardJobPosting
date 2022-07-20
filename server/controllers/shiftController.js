@@ -28,23 +28,44 @@ const getShift = (req, res) => {
 const getGuardShifts = (req, res) => {
   try {
     const { guard_id } = req.params;
-    connection.query(
-      `SELECT * FROM shift WHERE fk_guard=${guard_id}`,
-      (err, rows) => {
-        if (!err) {
-          res.status(200).json({
-            success: true,
-            message: "Successfully Retrieved All Guard Shifts!",
-            data: rows,
-          });
-        } else {
-          res.status(404).json({
-            success: false,
-            message: "Guard Shifts Not Found!",
-          });
+    const { date, flag } = req.body;
+    if (flag) {
+      connection.query(
+        `SELECT * FROM shift WHERE fk_guard=${guard_id}`,
+        (err, rows) => {
+          if (!err) {
+            res.status(200).json({
+              success: true,
+              message: "Successfully Retrieved All Guard Shifts!",
+              data: rows,
+            });
+          } else {
+            res.status(404).json({
+              success: false,
+              message: "Guard Shifts Not Found!",
+            });
+          }
         }
-      }
-    );
+      );
+    } else {
+      connection.query(
+        `SELECT * FROM shift WHERE fk_guard=${guard_id} WHERE date < '${date}'`,
+        (err, rows) => {
+          if (!err) {
+            res.status(200).json({
+              success: true,
+              message: "Successfully Retrieved All Past Guard Shifts!",
+              data: rows,
+            });
+          } else {
+            res.status(404).json({
+              success: false,
+              message: "Guard Shifts Not Found!",
+            });
+          }
+        }
+      );
+    }
   } catch (error) {
     res.status(500).json({
       success: false,

@@ -236,7 +236,13 @@ const getAppliedShifts = (req, res) => {
     connection.query(
       `SELECT shift.shiftID, shift.startTime, shift.endTime, shift.date, shift.isBooked, guard.guardID, guard.firstName, guard.middleName, guard.lastName, jobs.company_fk, jobs.jobsID, jobs.jobName, jobs.description, jobs.payrate, jobs.documentList, jobs.lat, jobs.lng FROM jobrequest INNER JOIN shift ON jobrequest.fk_shift = shift.shiftID INNER JOIN guard ON jobrequest.fk_guard = guard.guardID INNER JOIN jobs ON jobs.jobsID = jobrequest.fk_job WHERE shift.isBooked = 0 AND jobs.company_fk = ${company_id} GROUP BY shift.shiftID`,
       (err, rows) => {
-        if (!err) {
+        if (err || rows.length === 0) {
+          res.status(404).json({
+            success: false,
+            message: "Applied Shifts Not Found!",
+            guard: {},
+          });
+        } else {
           let guard = {};
           rows.forEach((row, i) => {
             guard = {

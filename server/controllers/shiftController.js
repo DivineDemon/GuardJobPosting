@@ -41,15 +41,15 @@ const getGuardShifts = (req, res) => {
             });
           } else {
             res.status(404).json({
-              success: false,
-              message: "Guard Shifts Not Found!",
+              success: true,
+              data: [],
             });
           }
         }
       );
     } else {
       connection.query(
-        `SELECT * FROM shift WHERE fk_guard=${guard_id} WHERE date < '${date}'`,
+        `SELECT * FROM shift WHERE fk_guard=${guard_id} AND date < '${date}'`,
         (err, rows) => {
           if (!err) {
             res.status(200).json({
@@ -59,8 +59,8 @@ const getGuardShifts = (req, res) => {
             });
           } else {
             res.status(404).json({
-              success: false,
-              message: "Guard Shifts Not Found!",
+              success: true,
+              data: [],
             });
           }
         }

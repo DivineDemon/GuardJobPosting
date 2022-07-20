@@ -122,9 +122,9 @@ const getJobShifts = (req, res) => {
 const addShift = (req, res) => {
   try {
     const { startTime, endTime, date } = req.body;
-    const { job_id } = req.params;
+    const { job_id, company_id } = req.params;
     connection.query(
-      `INSERT INTO shift (startTime, endTime, date, fk_job) VALUES ('${startTime}', '${endTime}', '${date}', ${job_id})`,
+      `INSERT INTO shift (startTime, endTime, date, fk_job, comfk) VALUES ('${startTime}', '${endTime}', '${date}', ${job_id}, ${company_id})`,
       (err, rows, fields) => {
         if (!err) {
           res.status(200).json({

@@ -131,10 +131,39 @@ const updateGuardStatus = (req, res) => {
   }
 };
 
+const updateGuardDeviceID = (req, res) => {
+  try {
+    const { guard_id } = req.params;
+    const { device_id } = req.body;
+    connection.query(
+      `UPDATE guard SET guardDeviceId='${device_id}' WHERE guardID=${guard_id}`,
+      (err, rows) => {
+        if (!err) {
+          res.status(200).json({
+            success: true,
+            message: "Guard Device ID Updated Successfully!",
+          });
+        } else {
+          res.status(404).json({
+            success: false,
+            message: "Guard Not Found!",
+          });
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getGuards,
   getGuard,
   deleteGuard,
   updateGuard,
   updateGuardStatus,
+  updateGuardDeviceID,
 };

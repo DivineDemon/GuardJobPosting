@@ -80,6 +80,7 @@ const deleteCompany = (req, res) => {
 const updateCompany = (req, res) => {
   try {
     const { id } = req.params;
+    const { name, phone, email, password } = req.body;
     connection.query(
       `UPDATE company SET name='${name}', phone='${phone}', email='${email}', password='${password}' WHERE companyID=${id}`,
       (err, rows) => {
@@ -103,9 +104,40 @@ const updateCompany = (req, res) => {
   }
 };
 
+const updateCompanyDeviceID = (req, res) => {
+  try {
+    const { id } = req.params;
+    const { device_id } = req.body;
+    connection.query(
+      `UPDATE company SET companyDeviceId='${device_id}' WHERE companyID=${id}`,
+      (err, rows) => {
+        if (!err) {
+          res
+            .status(200)
+            .json({
+              success: true,
+              message: "Company Device ID Updated Successfully!",
+            });
+        } else {
+          res.status(404).json({
+            success: false,
+            message: "Company Not Found!",
+          });
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getCompanies,
   getCompany,
   deleteCompany,
   updateCompany,
+  updateCompanyDeviceID,
 };

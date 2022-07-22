@@ -1,4 +1,5 @@
 const { connection } = require("../db");
+const { sendNotification } = require("../notifications/firebase");
 
 const getShift = (req, res) => {
   try {
@@ -309,12 +310,20 @@ const getAppliedShifts = (req, res) => {
 const approveShifts = (req, res) => {
   try {
     const { guard_id } = req.params;
-    const { shiftIDs, isBooked } = req.body;
+    const { shiftIDs, isBooked, device_id } = req.body;
     connection.query(
       "UPDATE shift SET isBooked = ?, fk_guard = ? WHERE shiftID IN (?)",
       [isBooked, guard_id, shiftIDs],
       (err, rows) => {
         if (!err) {
+          message = {
+            notification: {
+              title: "Shift Approval",
+              body: "Shift Approved Successfully!",
+            },
+            device_id,
+          };
+          sendNotification(message);
           res.status(200).json({
             success: true,
             message: `Successfully Approved Shift!`,

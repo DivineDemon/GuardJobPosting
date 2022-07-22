@@ -4,6 +4,7 @@ const {
   deleteCompany,
   getCompany,
   updateCompany,
+  updateCompanyDeviceID,
 } = require("../controllers/companyController");
 const {
   verifyTokenAndAdmin,
@@ -18,5 +19,6 @@ router
   .delete(verifyTokenAndAdmin, deleteCompany)
   .get(verifyTokenAndAdmin, getCompany)
   .patch(verifyTokenAndCompany, updateCompany);
+router.patch("/device/:company_id", updateCompanyDeviceID);
 
 module.exports = router;

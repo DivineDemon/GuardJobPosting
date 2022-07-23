@@ -11,13 +11,13 @@ const guardProfile = (req, res) => {
       connection.query(
         `SELECT 'guard' AS tablename, guard.* FROM guard WHERE guardID=${id}
         UNION
-        SELECT 'guardaddress' AS tablename, guardaddress.*, Null as col6, Null as col7, Null as col8, Null as col9, Null as col10, Null as col11, Null as col12, Null as col13, Null as col14, Null as col15, Null as col16 FROM guardaddress WHERE fk_guard=${id}
+        SELECT 'guardaddress' AS tablename, guardaddress.*, Null as col6, Null as col7, Null as col8, Null as col9, Null as col10, Null as col11, Null as col12, Null as col13, Null as col14, Null as col15, Null as col16, Null as col17 FROM guardaddress WHERE fk_guard=${id}
         UNION
-        SELECT 'document' as tablename, document.* FROM document WHERE fk_guard=${id}
+        SELECT 'document' as tablename, document.*, Null as col17 FROM document WHERE fk_guard=${id}
         UNION
-        SELECT 'otherdocs' AS tablename, otherdocs.*, Null as col5, Null as col6, Null as col7, Null as col8, Null as col9, Null as col10, Null as col11, Null as col12, Null as col13, Null as col14, Null as col15, Null as col16 FROM otherdocs WHERE fk_guard=${id}
+        SELECT 'otherdocs' AS tablename, otherdocs.*, Null as col5, Null as col6, Null as col7, Null as col8, Null as col9, Null as col10, Null as col11, Null as col12, Null as col13, Null as col14, Null as col15, Null as col16, Null as col17 FROM otherdocs WHERE fk_guard=${id}
         UNION
-        SELECT 'bank' AS tablename, bank.*, Null as col8, Null as col9, Null as col10, Null as col11, Null as col12, Null as col13, Null as col14, Null as col15, Null as col16 FROM bank WHERE guard_id=${id}`,
+        SELECT 'bank' AS tablename, bank.*, Null as col8, Null as col9, Null as col10, Null as col11, Null as col12, Null as col13, Null as col14, Null as col15, Null as col16, Null as col17 FROM bank WHERE guard_id=${id}`,
         function (err, rows) {
           if (!err) {
             const guardToken = jwt.sign(
@@ -53,6 +53,7 @@ const guardProfile = (req, res) => {
                     gender: row.gender,
                     emergencyContact: row.emergencyContact,
                     status: row.status,
+                    device_id: row.guardDeviceId,
                   };
                   break;
                 case "guardaddress":
@@ -135,7 +136,7 @@ const companyProfile = (req, res) => {
       connection.query(
         `SELECT 'company' AS tablename, company.* FROM company WHERE companyID=${id}
         UNION
-        SELECT 'companyaddress' AS tablename, companyaddress.*, Null AS col6, Null AS col7, Null AS col8 FROM companyaddress WHERE fk_company=${id}`,
+        SELECT 'companyaddress' AS tablename, companyaddress.*, Null AS col6, Null AS col7, Null AS col8, Null as col9 FROM companyaddress WHERE fk_company=${id}`,
         function (err, rows) {
           if (!err) {
             const companyToken = jwt.sign(
@@ -163,6 +164,7 @@ const companyProfile = (req, res) => {
                     phone: row.phone,
                     email: row.email,
                     password: row.password,
+                    device_id: row.companyDeviceId,
                   };
                   break;
                 case "companyaddress":

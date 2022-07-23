@@ -196,6 +196,7 @@ const loginGuard = (req, res) => {
                 gender: rows[0].gender,
                 emergencyContact: rows[0].emergencyContact,
                 status: rows[0].status,
+                device_id: rows[0].guardDeviceId,
               },
               guardToken,
             });
@@ -247,6 +248,7 @@ const loginCompany = (req, res) => {
                   phone: rows[0].phone,
                   email: rows[0].email,
                   password: rows[0].password,
+                  device_id: rows[0].companyDeviceId,
                 },
               },
               companyToken,

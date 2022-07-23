@@ -316,18 +316,31 @@ const approveShifts = (req, res) => {
       [isBooked, guard_id, shiftIDs],
       (err, rows) => {
         if (!err) {
-          message = {
-            notification: {
-              title: "Shift Approval",
-              body: "Shift Approved Successfully!",
-            },
-            device_id,
-          };
-          sendNotification(message);
-          res.status(200).json({
-            success: true,
-            message: `Successfully Approved Shift!`,
-          });
+          connection.query(
+            "SELECT guardDeviceId from guard WHERE guardID IN (?)",
+            [guard_id],
+            (err, rowss) => {
+              if (!err) {
+                message = {
+                  notification: {
+                    title: "Shift Approval",
+                    body: "Shift Approved Successfully!",
+                  },
+                  device_id,
+                };
+                sendNotification(message);
+                res.status(200).json({
+                  success: true,
+                  message: `Successfully Approved Shift!`,
+                });
+              } else {
+                res.status(404).json({
+                  success: false,
+                  message: "Guard Not Found!",
+                });
+              }
+            }
+          );
         } else {
           res.status(404).json({
             success: false,

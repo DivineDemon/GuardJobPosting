@@ -310,7 +310,7 @@ const getAppliedShifts = (req, res) => {
 const approveShifts = (req, res) => {
   try {
     const { guard_id } = req.params;
-    const { shiftIDs, isBooked, device_id } = req.body;
+    const { shiftIDs, isBooked } = req.body;
     connection.query(
       "UPDATE shift SET isBooked = ?, fk_guard = ? WHERE shiftID IN (?)",
       [isBooked, guard_id, shiftIDs],
@@ -326,7 +326,7 @@ const approveShifts = (req, res) => {
                     title: "Shift Approval",
                     body: "Shift Approved Successfully!",
                   },
-                  device_id,
+                  device_id: rowss[0].guardDeviceId,
                 };
                 sendNotification(message);
                 res.status(200).json({

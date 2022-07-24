@@ -294,9 +294,9 @@ const getAppliedShifts = (req, res) => {
             guard: {},
           });
         } else {
-          let guard = {};
+          let guard = [];
           rows.forEach((row, i) => {
-            guard = {
+            const g = {
               guardID: rows[i].guardID,
               guardFirstName: rows[i].firstName,
               guardMiddleName: rows[i].middleName,
@@ -319,6 +319,7 @@ const getAppliedShifts = (req, res) => {
                 ],
               },
             };
+            guard.push(g);
           });
           res.status(200).json({
             success: true,

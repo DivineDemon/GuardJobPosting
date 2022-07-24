@@ -29,7 +29,7 @@ const guardProfile = (req, res) => {
               },
               SECRET,
               {
-                expiresIn: "7d",
+                expiresIn: "30d",
               }
             );
 
@@ -148,7 +148,7 @@ const companyProfile = (req, res) => {
               },
               SECRET,
               {
-                expiresIn: "7d",
+                expiresIn: "30d",
               }
             );
 

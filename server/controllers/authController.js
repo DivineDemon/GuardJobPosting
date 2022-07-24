@@ -134,7 +134,7 @@ const loginAdmin = (req, res) => {
               },
               SECRET,
               {
-                expiresIn: "7d",
+                expiresIn: "30d",
               }
             );
             res.status(200).json({
@@ -180,7 +180,7 @@ const loginGuard = (req, res) => {
               },
               SECRET,
               {
-                expiresIn: "7d",
+                expiresIn: "30d",
               }
             );
             res.status(200).json({
@@ -237,7 +237,7 @@ const loginCompany = (req, res) => {
               },
               SECRET,
               {
-                expiresIn: "7d",
+                expiresIn: "30d",
               }
             );
             res.status(200).json({

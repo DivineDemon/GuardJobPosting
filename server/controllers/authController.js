@@ -14,7 +14,8 @@ const addGuard = (req, res) => {
       phone,
       dob,
       gender,
-      emergenctContact,
+      emergencyContact,
+      guardDeviceId,
     } = req.body;
     connection.query(
       `SELECT * FROM guard WHERE email='${email} OR phone='${phone}'`,
@@ -26,7 +27,7 @@ const addGuard = (req, res) => {
           });
         } else {
           connection.query(
-            `INSERT INTO guard (firstName, middleName, lastName, email, password, phone, dob, gender, emergencyContact) VALUES ('${firstName}', '${middleName}', '${lastName}', '${email}', '${password}', '${phone}', '${dob}', '${gender}', '${emergencyContact}')`,
+            `INSERT INTO guard (firstName, middleName, lastName, email, password, phone, dob, gender, emergencyContact, guardDeviceId) VALUES ('${firstName}', '${middleName}', '${lastName}', '${email}', '${password}', '${phone}', '${dob}', '${gender}', '${emergencyContact}', '${guardDeviceId}')`,
             (err, rows) => {
               if (!err) {
                 res.status(201).json({
@@ -43,6 +44,7 @@ const addGuard = (req, res) => {
                       dob,
                       gender,
                       emergencyContact,
+                      guardDeviceId,
                     },
                     address: {},
                     documents: {},
@@ -71,7 +73,7 @@ const addGuard = (req, res) => {
 
 const addCompany = (req, res) => {
   try {
-    const { companyName, phone, email, password } = req.body;
+    const { companyName, phone, email, password, companyDeviceId } = req.body;
     connection.query(
       `SELECT * FROM company WHERE email='${email}' OR phone='${phone}'`,
       (err, rows) => {
@@ -82,7 +84,7 @@ const addCompany = (req, res) => {
           });
         } else {
           connection.query(
-            `INSERT INTO company (companyName, phone, email, password) VALUES ('${companyName}', '${phone}', '${email}', '${password}')`,
+            `INSERT INTO company (companyName, phone, email, password, companyDeviceId) VALUES ('${companyName}', '${phone}', '${email}', '${password}', '${companyDeviceId}')`,
             (err, rows) => {
               if (!err) {
                 res.status(201).json({

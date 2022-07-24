@@ -113,6 +113,35 @@ const getCompanyShifts = (req, res) => {
   }
 };
 
+const getCompanyShiftsHistory = (req, res) => {
+  try {
+    const { company_id } = req.params;
+    const { date, isBooked } = req.body;
+    connection.query(
+      `SELECT * FROM shift WHERE comfk=${company_id} AND date < '${date}' AND isBooked=${isBooked}`,
+      (err, rows) => {
+        if (!err) {
+          res.status(200).json({
+            success: true,
+            message: "Successfully Retrieved All Past Company Shifts!",
+            data: rows,
+          });
+        } else {
+          res.status(404).json({
+            success: true,
+            data: [],
+          });
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 const getJobShifts = (req, res) => {
   try {
     const { job_id } = req.params;
@@ -260,7 +289,7 @@ const getAppliedShifts = (req, res) => {
       (err, rows) => {
         if (err || rows.length === 0) {
           res.status(404).json({
-            success: false,
+            success: true,
             message: "Applied Shifts Not Found!",
             guard: {},
           });
@@ -385,6 +414,7 @@ const getApprovedShifts = (req, res) => {
 module.exports = {
   getGuardShifts,
   getCompanyShifts,
+  getCompanyShiftsHistory,
   getJobShifts,
   getShift,
   addShift,

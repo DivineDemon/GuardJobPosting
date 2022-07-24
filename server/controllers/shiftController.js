@@ -346,7 +346,7 @@ const approveShifts = (req, res) => {
       (err, rows) => {
         if (!err) {
           connection.query(
-            `SELECT guardDeviceId from guard WHERE guardID=${rows.fk_guard}`,
+            `SELECT guardDeviceId from guard WHERE guardID=${guard_id}`,
             (err, rowss) => {
               if (!err) {
                 // text = {
@@ -365,7 +365,7 @@ const approveShifts = (req, res) => {
                 res.status(404).json({
                   success: false,
                   message: "Guard Not Found!",
-                  guard: rows.fk_guard,
+                  guard: guard_id,
                 });
               }
             }

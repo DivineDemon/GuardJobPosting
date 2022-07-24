@@ -1,5 +1,5 @@
 const { connection } = require("../db");
-const { sendNotification } = require("../notifications/firebase");
+// const { sendNotification } = require("../notifications/firebase");
 
 const getShift = (req, res) => {
   try {
@@ -349,14 +349,14 @@ const approveShifts = (req, res) => {
             `SELECT guardDeviceId from guard WHERE guardID=${rows.fk_guard}`,
             (err, rowss) => {
               if (!err) {
-                text = {
-                  notification: {
-                    title: "Shift Approval",
-                    body: "Shift Approved Successfully!",
-                  },
-                  device_id: rowss[0].guardDeviceId,
-                };
-                sendNotification(text);
+                // text = {
+                //   notification: {
+                //     title: "Shift Approval",
+                //     body: "Shift Approved Successfully!",
+                //   },
+                //   device_id: rowss[0].guardDeviceId,
+                // };
+                // sendNotification(text);
                 res.status(200).json({
                   success: true,
                   message: `Successfully Approved Shift!`,
@@ -365,6 +365,7 @@ const approveShifts = (req, res) => {
                 res.status(404).json({
                   success: false,
                   message: "Guard Not Found!",
+                  guard: rows.fk_guard,
                 });
               }
             }

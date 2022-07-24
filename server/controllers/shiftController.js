@@ -346,18 +346,17 @@ const approveShifts = (req, res) => {
       (err, rows) => {
         if (!err) {
           connection.query(
-            "SELECT guardDeviceId from guard WHERE guardID IN (?)",
-            [guard_id],
+            `SELECT guardDeviceId from guard WHERE guardID=${rows.fk_guard}`,
             (err, rowss) => {
               if (!err) {
-                message = {
+                text = {
                   notification: {
                     title: "Shift Approval",
                     body: "Shift Approved Successfully!",
                   },
                   device_id: rowss[0].guardDeviceId,
                 };
-                sendNotification(message);
+                sendNotification(text);
                 res.status(200).json({
                   success: true,
                   message: `Successfully Approved Shift!`,

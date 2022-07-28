@@ -4,10 +4,11 @@ const rowsPerPage = process.env.ROWS || 25;
 const getBanks = (req, res) => {
   try {
     connection.query("SELECT * FROM bank", (err, rows) => {
-      if (err) {
+      if (err || rows.length === 0) {
         res.status(404).json({
-          success: false,
+          success: true,
           message: "No Banks Found!",
+          banks: [],
           error: err.message,
         });
       }

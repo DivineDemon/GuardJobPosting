@@ -4,10 +4,12 @@ const rowsPerPage = process.env.ROWS || 25;
 
 const getJobs = (req, res) => {
   connection.query("SELECT * FROM jobs", (err, rows) => {
-    if (err) {
+    if (err || rows.length === 0) {
       res.status(404).json({
-        success: false,
+        success: true,
         message: "Jobs Not Found!",
+        jobs: [],
+        error: err.message,
       });
     }
 

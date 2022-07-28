@@ -2,17 +2,20 @@ const { connection } = require("../db");
 const rowsPerPage = process.env.ROWS || 25;
 
 const getBanks = (req, res) => {
-  try {
-    connection.query("SELECT * FROM bank", (err, rows) => {
-      if (err || rows.length === 0) {
-        res.status(404).json({
-          success: true,
-          message: "No Banks Found!",
-          banks: [],
-          error: err.message,
-        });
-      }
-
+  connection.query("SELECT * FROM bank", (err, rows) => {
+    if (err) {
+      res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    } else if (!rows.length) {
+      res.status(404).json({
+        success: true,
+        message: "No Banks Found!",
+        data: [],
+        error: err.message,
+      });
+    } else {
       const numOfRows = rows.length;
       const numOfPages = Math.ceil(numOfRows / rowsPerPage);
       let page = req.query.page ? Number(req.query.page) : 1;
@@ -41,16 +44,15 @@ const getBanks = (req, res) => {
             iterator -= page + 4 - numOfPages;
           }
 
-          res.send(rows);
+          res.json({
+            success: true,
+            message: "Successfully Retrieved All Banks!",
+            data: [rows],
+          });
         }
       );
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
-  }
+    }
+  });
 };
 
 const getBank = (req, res) => {

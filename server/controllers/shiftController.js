@@ -1,5 +1,4 @@
 const { connection } = require("../db");
-// const { sendNotification } = require("../notifications/firebase");
 
 const getShift = (req, res) => {
   try {
@@ -124,6 +123,35 @@ const getCompanyShiftsHistory = (req, res) => {
           res.status(200).json({
             success: true,
             message: "Successfully Retrieved All Past Company Shifts!",
+            data: rows,
+          });
+        } else {
+          res.status(404).json({
+            success: true,
+            data: [],
+          });
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const getCompanyFutureShifts = (req, res) => {
+  try {
+    const { company_id } = req.params;
+    const { date, isBooked } = req.body;
+    connection.query(
+      `SELECT * FROM shift WHERE comfk=${company_id} AND date >= '${date}' AND isBooked=${isBooked}`,
+      (err, rows) => {
+        if (!err) {
+          res.status(200).json({
+            success: true,
+            message: "Successfully Retrieved All Future Company Shifts!",
             data: rows,
           });
         } else {
@@ -350,14 +378,6 @@ const approveShifts = (req, res) => {
             `SELECT guardDeviceId from guard WHERE guardID=${guard_id}`,
             (err, rowss) => {
               if (!err) {
-                // text = {
-                //   notification: {
-                //     title: "Shift Approval",
-                //     body: "Shift Approved Successfully!",
-                //   },
-                //   device_id: rowss[0].guardDeviceId,
-                // };
-                // sendNotification(text);
                 res.status(200).json({
                   success: true,
                   message: `Successfully Approved Shift!`,
@@ -416,6 +436,7 @@ module.exports = {
   getGuardShifts,
   getCompanyShifts,
   getCompanyShiftsHistory,
+  getCompanyFutureShifts,
   getJobShifts,
   getShift,
   addShift,

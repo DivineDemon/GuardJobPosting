@@ -352,7 +352,7 @@ const getAppliedShifts = (req, res) => {
           res.status(200).json({
             success: true,
             message: "Successfully Retrieved Applied Shifts!",
-            guard: [guard],
+            guard,
           });
         }
       }

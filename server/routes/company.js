@@ -16,7 +16,7 @@ const router = express.Router();
 router.route("/").get(verifyTokenAndAdmin, getCompanies);
 router
   .route("/:id")
-  .delete(verifyTokenAndAdmin, deleteCompany)
+  .delete(deleteCompany)
   .get(verifyTokenAndAdmin, getCompany)
   .patch(verifyTokenAndCompany, updateCompany);
 router.patch("/device/:company_id", updateCompanyDeviceID);

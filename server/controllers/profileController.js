@@ -9,7 +9,7 @@ const guardProfile = (req, res) => {
     let isAdmin = 0;
     if (isAdmin === 0) {
       connection.query(
-        `SELECT 'guard' AS tablename, guard.* FROM guard WHERE guardID=${id} AND status='${status}'
+        `SELECT 'guard' AS tablename, guard.* FROM guard WHERE guardID=${id} AND status!='disabled'
         UNION
         SELECT 'guardaddress' AS tablename, guardaddress.*, Null as col6, Null as col7, Null as col8, Null as col9, Null as col10, Null as col11, Null as col12, Null as col13, Null as col14, Null as col15, Null as col16, Null as col17 FROM guardaddress WHERE fk_guard=${id}
         UNION
@@ -134,7 +134,7 @@ const companyProfile = (req, res) => {
     let isAdmin = 0;
     if (isAdmin === 0) {
       connection.query(
-        `SELECT 'company' AS tablename, company.* FROM company WHERE companyID=${id} AND comStatus='${comStatus}'
+        `SELECT 'company' AS tablename, company.* FROM company WHERE companyID=${id} AND comStatus!='disabled'
         UNION
         SELECT 'companyaddress' AS tablename, companyaddress.*, Null AS col6, Null AS col7, Null AS col8, Null AS col9, Null AS col10 FROM companyaddress WHERE fk_company=${id}`,
         function (err, rows) {

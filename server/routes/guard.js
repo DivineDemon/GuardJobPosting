@@ -6,6 +6,7 @@ const {
   updateGuard,
   updateGuardStatus,
   updateGuardDeviceID,
+  updateGuardActiveStatus,
 } = require("../controllers/guardController");
 const {
   verifyTokenAndGuard,
@@ -21,5 +22,6 @@ router
   .route("/upstat/:guard_id/:admin_id/:status")
   .patch(verifyTokenAndAdmin, updateGuardStatus);
 router.patch("/device/:guard_id", updateGuardDeviceID);
+router.patch("/activestat/:guard_id/:status", updateGuardActiveStatus);
 
 module.exports = router;

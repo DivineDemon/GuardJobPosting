@@ -131,6 +131,33 @@ const updateGuardStatus = (req, res) => {
   }
 };
 
+const updateGuardActiveStatus = (req, res) => {
+  try {
+    const { guard_id, status } = req.params;
+    connection.query(
+      `UPDATE guard SET status='${status}' WHERE guardID=${guard_id}`,
+      (err, rows) => {
+        if (!err) {
+          res.status(200).json({
+            success: true,
+            message: "Guard Status Updated Successfully!",
+          });
+        } else {
+          res.status(404).json({
+            success: false,
+            message: "Guard Not Found!",
+          });
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 const updateGuardDeviceID = (req, res) => {
   try {
     const { guard_id } = req.params;
@@ -165,5 +192,6 @@ module.exports = {
   deleteGuard,
   updateGuard,
   updateGuardStatus,
+  updateGuardActiveStatus,
   updateGuardDeviceID,
 };

@@ -112,12 +112,37 @@ const updateCompanyDeviceID = (req, res) => {
       `UPDATE company SET companyDeviceId='${device_id}' WHERE companyID=${id}`,
       (err, rows) => {
         if (!err) {
-          res
-            .status(200)
-            .json({
-              success: true,
-              message: "Company Device ID Updated Successfully!",
-            });
+          res.status(200).json({
+            success: true,
+            message: "Company Device ID Updated Successfully!",
+          });
+        } else {
+          res.status(404).json({
+            success: false,
+            message: "Company Not Found!",
+          });
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const updateCompanyStatus = (req, res) => {
+  try {
+    const { company_id, status } = req.params;
+    connection.query(
+      `UPDATE company SET comStatus='${status}' WHERE companyID=${company_id}`,
+      (err, rows) => {
+        if (!err) {
+          res.status(200).json({
+            success: true,
+            message: "Company Status Updated Successfully!",
+          });
         } else {
           res.status(404).json({
             success: false,
@@ -140,4 +165,5 @@ module.exports = {
   deleteCompany,
   updateCompany,
   updateCompanyDeviceID,
+  updateCompanyStatus,
 };

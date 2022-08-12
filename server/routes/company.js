@@ -5,6 +5,7 @@ const {
   getCompany,
   updateCompany,
   updateCompanyDeviceID,
+  updateCompanyStatus,
 } = require("../controllers/companyController");
 const {
   verifyTokenAndAdmin,
@@ -20,5 +21,6 @@ router
   .get(verifyTokenAndAdmin, getCompany)
   .patch(verifyTokenAndCompany, updateCompany);
 router.patch("/device/:company_id", updateCompanyDeviceID);
+router.patch("/activestat/:company_id/:status", updateCompanyStatus);
 
 module.exports = router;

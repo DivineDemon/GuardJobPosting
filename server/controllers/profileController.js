@@ -4,12 +4,12 @@ const { connection } = require("../db");
 const SECRET = "guard-recruiting-app" || process.env.SECRET;
 
 const guardProfile = (req, res) => {
-  const { id } = req.params; // guard ID
+  const { id, status } = req.params; // guard ID
   try {
     let isAdmin = 0;
     if (isAdmin === 0) {
       connection.query(
-        `SELECT 'guard' AS tablename, guard.* FROM guard WHERE guardID=${id}
+        `SELECT 'guard' AS tablename, guard.* FROM guard WHERE guardID=${id} AND status='${status}'
         UNION
         SELECT 'guardaddress' AS tablename, guardaddress.*, Null as col6, Null as col7, Null as col8, Null as col9, Null as col10, Null as col11, Null as col12, Null as col13, Null as col14, Null as col15, Null as col16, Null as col17 FROM guardaddress WHERE fk_guard=${id}
         UNION
@@ -130,13 +130,13 @@ const guardProfile = (req, res) => {
 
 const companyProfile = (req, res) => {
   try {
-    const { id } = req.params; // company ID
+    const { id, comStatus } = req.params; // company ID
     let isAdmin = 0;
     if (isAdmin === 0) {
       connection.query(
-        `SELECT 'company' AS tablename, company.* FROM company WHERE companyID=${id}
+        `SELECT 'company' AS tablename, company.* FROM company WHERE companyID=${id} AND comStatus='${comStatus}'
         UNION
-        SELECT 'companyaddress' AS tablename, companyaddress.*, Null AS col6, Null AS col7, Null AS col8, Null as col9 FROM companyaddress WHERE fk_company=${id}`,
+        SELECT 'companyaddress' AS tablename, companyaddress.*, Null AS col6, Null AS col7, Null AS col8, Null AS col9, Null AS col10 FROM companyaddress WHERE fk_company=${id}`,
         function (err, rows) {
           if (!err) {
             const companyToken = jwt.sign(
@@ -165,6 +165,7 @@ const companyProfile = (req, res) => {
                     email: row.email,
                     password: row.password,
                     device_id: row.companyDeviceId,
+                    status: row.comStatus,
                   };
                   break;
                 case "companyaddress":

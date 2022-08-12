@@ -160,10 +160,10 @@ const loginAdmin = (req, res) => {
 
 const loginGuard = (req, res) => {
   try {
-    const { email, password, isAdmin, status } = req.body;
+    const { email, password, isAdmin } = req.body;
     if (isAdmin === 0) {
       connection.query(
-        `SELECT * FROM guard WHERE email='${email}' AND password='${password}' AND status='${status}'`,
+        `SELECT * FROM guard WHERE email='${email}' AND password='${password}' AND status!='disabled'`,
         function (err, rows) {
           if (err || rows.length === 0) {
             res.status(401).json({
@@ -217,10 +217,10 @@ const loginGuard = (req, res) => {
 
 const loginCompany = (req, res) => {
   try {
-    const { email, password, isAdmin, comStatus } = req.body;
+    const { email, password, isAdmin } = req.body;
     if (isAdmin === 0) {
       connection.query(
-        `SELECT * FROM company WHERE email='${email}' AND password='${password}' AND comStatus='${comStatus}'`,
+        `SELECT * FROM company WHERE email='${email}' AND password='${password}' AND comStatus!='disabled'`,
         function (err, rows) {
           if (err || rows.length === 0) {
             res.status(401).json({

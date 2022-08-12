@@ -22,6 +22,6 @@ router
   .route("/upstat/:guard_id/:admin_id/:status")
   .patch(verifyTokenAndAdmin, updateGuardStatus);
 router.patch("/device/:guard_id", updateGuardDeviceID);
-router.patch("/activestat/:guard_id/:status", updateGuardActiveStatus);
+router.patch("/activestat/:guard_id/:status", verifyTokenAndGuard, updateGuardActiveStatus);
 
 module.exports = router;

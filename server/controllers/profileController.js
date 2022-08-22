@@ -4,7 +4,7 @@ const { connection } = require("../db");
 const SECRET = "guard-recruiting-app" || process.env.SECRET;
 
 const guardProfile = (req, res) => {
-  const { id, status } = req.params; // guard ID
+  const { id } = req.params; // guard ID
   try {
     let isAdmin = 0;
     if (isAdmin === 0) {
@@ -130,7 +130,7 @@ const guardProfile = (req, res) => {
 
 const companyProfile = (req, res) => {
   try {
-    const { id, comStatus } = req.params; // company ID
+    const { id } = req.params; // company ID
     let isAdmin = 0;
     if (isAdmin === 0) {
       connection.query(

@@ -251,6 +251,7 @@ const loginCompany = (req, res) => {
                   email: rows[0].email,
                   password: rows[0].password,
                   device_id: rows[0].companyDeviceId,
+                  liaison: rows[0].liaison,
                 },
               },
               companyToken,

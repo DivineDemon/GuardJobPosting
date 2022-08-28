@@ -13,6 +13,7 @@ const {
   getCompanyShifts,
   getCompanyShiftsHistory,
   getCompanyFutureShifts,
+  getPendingShifts,
 } = require("../controllers/shiftController");
 const {
   verifyTokenAndCompany,
@@ -33,6 +34,7 @@ router
 router.route("/apply/:job_id/:guard_id").post(verifyTokenAndGuard, applyShift);
 router.put("/approve/guard/:guard_id", verifyTokenAndCompany, approveShifts);
 router.get("/approved", getApprovedShifts);
+router.get("/pending", getPendingShifts);
 router.post("/company/approved/:company_id", getCompanyShifts);
 router.post("/company/approved/history/:company_id", getCompanyShiftsHistory);
 router.post("/company/approved/future/:company_id", getCompanyFutureShifts);

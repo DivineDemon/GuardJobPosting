@@ -432,6 +432,33 @@ const getApprovedShifts = (req, res) => {
   }
 };
 
+const getPendingShifts = (req, res) => {
+  try {
+    connection.query(
+      `SELECT shift.shiftID, jobrequest.fk_job, jobrequest.fk_guard FROM shift INNER JOIN jobrequest ON shift.shiftID = jobrequest.fk_shift WHERE shift.fk_guard IS NULL`,
+      (err, rows) => {
+        if (!err) {
+          res.status(200).json({
+            success: true,
+            message: "Successfully Retrieved all Pending Shifts!",
+            data: rows,
+          });
+        } else {
+          res.status(404).json({
+            success: false,
+            message: "Pending Shifts not Found!",
+          });
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getGuardShifts,
   getCompanyShifts,
@@ -446,4 +473,5 @@ module.exports = {
   getAppliedShifts,
   approveShifts,
   getApprovedShifts,
+  getPendingShifts,
 };

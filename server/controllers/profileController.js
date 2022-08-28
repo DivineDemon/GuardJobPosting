@@ -136,7 +136,7 @@ const companyProfile = (req, res) => {
       connection.query(
         `SELECT 'company' AS tablename, company.* FROM company WHERE companyID=${id} AND comStatus!='disabled'
         UNION
-        SELECT 'companyaddress' AS tablename, companyaddress.*, Null AS col6, Null AS col7, Null AS col8, Null AS col9, Null AS col10 FROM companyaddress WHERE fk_company=${id}`,
+        SELECT 'companyaddress' AS tablename, companyaddress.*, Null AS col6, Null AS col7, Null AS col8, Null AS col9, Null AS col10, Null AS col11 FROM companyaddress WHERE fk_company=${id}`,
         function (err, rows) {
           if (!err) {
             const companyToken = jwt.sign(
@@ -166,6 +166,7 @@ const companyProfile = (req, res) => {
                     password: row.password,
                     device_id: row.companyDeviceId,
                     status: row.comStatus,
+                    liason: row.liason,
                   };
                   break;
                 case "companyaddress":

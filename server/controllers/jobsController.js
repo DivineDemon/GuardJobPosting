@@ -5,16 +5,20 @@ const rowsPerPage = process.env.ROWS || 25;
 const getJobs = (req, res) => {
   connection.query("SELECT * FROM jobs ORDER BY jobsID DESC", (err, rows) => {
     if (err) {
-      res.status(500).json([{
-        success: false,
-        error: err.message,
-      }]);
+      res.status(500).json([
+        {
+          success: false,
+          error: err.message,
+        },
+      ]);
     } else if (!rows.length) {
-      res.status(404).json([{
-        success: true,
-        message: "Jobs Not Found!",
-        jobs: [],
-      }]);
+      res.status(404).json([
+        {
+          success: true,
+          message: "Jobs Not Found!",
+          jobs: [],
+        },
+      ]);
     } else {
       const numOfRows = rows.length;
       const numOfPages = Math.ceil(numOfRows / rowsPerPage);
@@ -30,10 +34,12 @@ const getJobs = (req, res) => {
         `SELECT * FROM jobs LIMIT ${startingLimit}, ${rowsPerPage}`,
         (err, rows) => {
           if (err) {
-            res.status(404).json([{
-              success: false,
-              message: "Jobs Not Found!",
-            }]);
+            res.status(404).json([
+              {
+                success: false,
+                message: "Jobs Not Found!",
+              },
+            ]);
           }
 
           let iterator = page - 5 < 1 ? 1 : page - 5;
@@ -258,55 +264,33 @@ const getAppliedJobs = (req, res) => {
 };
 
 const getNonAppliedJobs = (req, res) => {
-  connection.query("SELECT * FROM jobs", (err, rows) => {
-    if (err) {
-      res.status(500).json([{
-        success: false,
-        error: err.message,
-      }]);
-    } else if (!rows.length) {
-      res.status(404).json([{
-        success: true,
-        message: "Jobs Not Found!",
-        jobs: [],
-      }]);
-    } else {
-      const numOfRows = rows.length;
-      const numOfPages = Math.ceil(numOfRows / rowsPerPage);
-      let page = req.query.page ? Number(req.query.page) : 1;
-      if (page > numOfPages) {
-        res.send("/?page=" + encodeURIComponent(numOfPages));
-      } else if (page < 1) {
-        res.send("/?page=" + encodeURIComponent("1"));
-      }
-
-      const startingLimit = (page - 1) * rowsPerPage;
-      connection.query(
-        `SELECT * FROM jobs LIMIT ${startingLimit}, ${rowsPerPage}`,
-        (err, rows) => {
-          if (err) {
-            res.status(404).json([{
-              success: false,
-              message: "Jobs Not Found!",
-            }]);
-          }
-
-          let iterator = page - 5 < 1 ? 1 : page - 5;
-          let endingLink =
-            iterator + 9 <= numOfPages ? iterator + 9 : page + numOfPages;
-          if (endingLink < page + 4) {
-            iterator -= page + 4 - numOfPages;
-          }
-
-          res.json({
+  try {
+    connection.query(
+      `SELECT l.* FROM jobs l WHERE NOT EXISTS (SELECT NULL FROM jobrequest r WHERE r.jobRequestId = l.jobsID)`,
+      (err, rows) => {
+        if (!err) {
+          res.status(200).json({
             success: true,
-            message: "Successfully Retrieved All Jobs!",
-            jobs: [rows],
+            message: "Successfully Retrieved Non Applied Jobs for Guard!",
+            data: {
+              rows,
+              applied: false,
+            },
+          });
+        } else {
+          res.status(404).json({
+            success: false,
+            message: "All Jobs Applied For!",
           });
         }
-      );
-    }
-  });
+      }
+    );
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
 module.exports = {
@@ -317,4 +301,5 @@ module.exports = {
   updateJob,
   getCompanyJobs,
   getAppliedJobs,
+  getNonAppliedJobs,
 };

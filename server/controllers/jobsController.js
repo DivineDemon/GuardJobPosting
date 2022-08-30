@@ -1,63 +1,70 @@
 const { connection } = require("../db");
-// const stripe = require("stripe")(process.env.STRIPE_KEY);
 const rowsPerPage = process.env.ROWS || 25;
 
 const getJobs = (req, res) => {
-  connection.query("SELECT * FROM jobs ORDER BY jobsID DESC", (err, rows) => {
-    if (err) {
-      res.status(500).json([
-        {
-          success: false,
-          error: err.message,
-        },
-      ]);
-    } else if (!rows.length) {
-      res.status(404).json([
-        {
-          success: true,
-          message: "Jobs Not Found!",
-          jobs: [],
-        },
-      ]);
-    } else {
-      const numOfRows = rows.length;
-      const numOfPages = Math.ceil(numOfRows / rowsPerPage);
-      let page = req.query.page ? Number(req.query.page) : 1;
-      if (page > numOfPages) {
-        res.send("/?page=" + encodeURIComponent(numOfPages));
-      } else if (page < 1) {
-        res.send("/?page=" + encodeURIComponent("1"));
-      }
-
-      const startingLimit = (page - 1) * rowsPerPage;
-      connection.query(
-        `SELECT * FROM jobs LIMIT ${startingLimit}, ${rowsPerPage}`,
-        (err, rows) => {
-          if (err) {
-            res.status(404).json([
-              {
-                success: false,
-                message: "Jobs Not Found!",
-              },
-            ]);
-          }
-
-          let iterator = page - 5 < 1 ? 1 : page - 5;
-          let endingLink =
-            iterator + 9 <= numOfPages ? iterator + 9 : page + numOfPages;
-          if (endingLink < page + 4) {
-            iterator -= page + 4 - numOfPages;
-          }
-
-          res.json({
+  const { guard_id } = req.params;
+  connection.query(
+    `SELECT j.*, jobrequest.status FROM jobs j
+    LEFT JOIN jobrequest
+    ON j.jobsID = jobrequest.fk_job
+    AND jobrequest.fk_guard = ${guard_id}
+    ORDER BY j.jobsID DESC`,
+    (err, rows) => {
+      if (err) {
+        res.status(500).json([
+          {
+            success: false,
+            error: err.message,
+          },
+        ]);
+      } else if (!rows.length) {
+        res.status(404).json([
+          {
             success: true,
-            message: "Successfully Retrieved All Jobs!",
-            jobs: [rows],
-          });
+            message: "Jobs Not Found!",
+            jobs: [],
+          },
+        ]);
+      } else {
+        const numOfRows = rows.length;
+        const numOfPages = Math.ceil(numOfRows / rowsPerPage);
+        let page = req.query.page ? Number(req.query.page) : 1;
+        if (page > numOfPages) {
+          res.send("/?page=" + encodeURIComponent(numOfPages));
+        } else if (page < 1) {
+          res.send("/?page=" + encodeURIComponent("1"));
         }
-      );
+
+        const startingLimit = (page - 1) * rowsPerPage;
+        connection.query(
+          `SELECT * FROM jobs LIMIT ${startingLimit}, ${rowsPerPage}`,
+          (err, rows) => {
+            if (err) {
+              res.status(404).json([
+                {
+                  success: false,
+                  message: "Jobs Not Found!",
+                },
+              ]);
+            }
+
+            let iterator = page - 5 < 1 ? 1 : page - 5;
+            let endingLink =
+              iterator + 9 <= numOfPages ? iterator + 9 : page + numOfPages;
+            if (endingLink < page + 4) {
+              iterator -= page + 4 - numOfPages;
+            }
+
+            res.json({
+              success: true,
+              message: "Successfully Retrieved All Jobs!",
+              jobs: rows,
+            });
+          }
+        );
+      }
     }
-  });
+  );
 };
 
 const getJob = (req, res) => {

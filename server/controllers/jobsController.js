@@ -37,7 +37,12 @@ const getJobs = (req, res) => {
 
         const startingLimit = (page - 1) * rowsPerPage;
         connection.query(
-          `SELECT * FROM jobs LIMIT ${startingLimit}, ${rowsPerPage}`,
+          `SELECT j.*, jobrequest.status FROM jobs j
+          LEFT JOIN jobrequest
+          ON j.jobsID = jobrequest.fk_job
+          AND jobrequest.fk_guard = ${guard_id}
+          ORDER BY j.jobsID DESC
+          LIMIT ${startingLimit}, ${rowsPerPage}`,
           (err, rows) => {
             if (err) {
               res.status(404).json([

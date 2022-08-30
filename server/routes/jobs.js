@@ -9,13 +9,10 @@ const {
   getAppliedJobs,
   getNonAppliedJobs,
 } = require("../controllers/jobsController");
-const {
-  verifyTokenAndGuard,
-  verifyTokenAndCompany,
-} = require("../middleware/verifyToken");
+const { verifyTokenAndCompany } = require("../middleware/verifyToken");
 const router = express.Router();
 
-router.get("/", getJobs);
+router.get("/:guard_id", getJobs);
 router.route("/:id").delete(verifyTokenAndCompany, deleteJob).get(getJob);
 router
   .route("/:job_id/:company_id/:address_id")

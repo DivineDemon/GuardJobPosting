@@ -12,7 +12,7 @@ const {
 const { verifyTokenAndCompany } = require("../middleware/verifyToken");
 const router = express.Router();
 
-router.get("/:guard_id", getJobs);
+router.get("/check/:guard_id", getJobs);
 router.route("/:id").delete(verifyTokenAndCompany, deleteJob).get(getJob);
 router
   .route("/:job_id/:company_id/:address_id")

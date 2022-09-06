@@ -51,25 +51,27 @@ const getOtherdoc = (req, res) => {
 
 const addOtherdocs = (req, res) => {
   try {
-    const { name, document } = req.body;
+    const data = req.body;
     const { guard_id } = req.params; // guard ID
-    connection.query(
-      `INSERT INTO otherdocs (otherDocName, document, fk_guard) VALUES ('${name}', '${document}', ${guard_id})`,
-      (err, rows, fields) => {
-        if (!err) {
-          res.status(201).json({
-            success: true,
-            message: "Data Inserted Successfully!",
-            data: req.body,
-          });
-        } else {
-          res.status(400).json({
-            success: false,
-            message: "Other Document Insertion Failure!",
-          });
+    data.forEach((element) => {
+      connection.query(
+        `INSERT INTO otherdocs (otherDocName, document, fk_guard) VALUES ('${element.name}', '${element.document}', ${guard_id})`,
+        (err, rows, fields) => {
+          if (!err) {
+            res.status(201).json({
+              success: true,
+              message: "Data Inserted Successfully!",
+              data: req.body,
+            });
+          } else {
+            res.status(400).json({
+              success: false,
+              message: "Other Document Insertion Failure!",
+            });
+          }
         }
-      }
-    );
+      );
+    });
   } catch (error) {
     res.status(500).json({
       success: false,

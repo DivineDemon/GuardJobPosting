@@ -74,7 +74,7 @@
 
 # TO-DO
 
-[] Create Server using Express
-[] Connect to MongoDB using mongoose
-[] Create Requisite Schema
-[] Create CRUD Endpoints in the API
+- [x] Create Server using Express
+- [x] Connect to MongoDB using mongoose
+- [x] Create Requisite Schema
+- [x] Create CRUD Endpoints in the API
